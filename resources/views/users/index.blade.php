@@ -13,20 +13,6 @@
         </div>
     </div>
 
-    @if ( session()->has('success'))
-        <div class="alert alert-success bg-success text-white alert-dismissible fade show" role="alert">
-            <strong>Sucesso!</strong>  {{ session()->get('success') }}
-            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="alert" aria-label="Close"></button>
-        </div>
-    @endif
-
-    @if ( session()->has('error'))
-        <div class="alert alert-danger bg-danger text-white alert-dismissible fade show" role="alert">
-            <strong>Erro!</strong>  {{ session()->get('error') }}
-            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="alert" aria-label="Close"></button>
-        </div>
-    @endif
-
     <div class="card">
         <div class="card-body">
             <div class="table-responsive">
