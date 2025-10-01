@@ -62,7 +62,7 @@
 
                 <div class="d-flex justify-content-end">
                     <a href="{{ route('user.index') }}" class="btn btn-danger me-2">Cancelar</a>
-                    <button type="submit" class="btn btn-primary">Savar usuário</button>
+                    <button type="submit" class="btn btn-primary">Salvar usuário</button>
                 </div>
             </form>
         </div>

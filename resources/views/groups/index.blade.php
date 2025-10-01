@@ -13,12 +13,6 @@
         </div>
     </div>
 
-    @if(session()->has('success'))
-        <div class="alert alert-success bg-success text-white alert-dismissible fade show" role="alert">
-            <strong>Sucesso!</strong> {{ session()->get('success') }}
-            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="alert" aria-label="Close"></button>
-        </div>
-    @endif
     <div class="row">
     @foreach($groups as $group)
 
