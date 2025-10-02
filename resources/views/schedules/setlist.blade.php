@@ -70,24 +70,48 @@
                                 <div class="modal-footer d-flex justify-content-center bg-primary">
                                     <div class="d-flex gap-4 align-items-center">
                                         <!-- Botão de navegação para esquerda -->
-                                        <button id="prev-song-lyrics_{{$song->id}}" type="button" class="btn btn-sm border-0 d-flex align-items-center btn-outline-white prev-song" data-song-id="{{$song->id}}" data-modal-type="lyrics">
+                                        <button
+                                            data-bs-toggle="tooltip" data-bs-placement="top"
+                                            data-bs-custom-class="custom-tooltip"
+                                            data-bs-title="Voltar à música anterior"
+                                            id="prev-song-lyrics_{{$song->id}}" type="button" class="btn btn-sm border-0 d-flex align-items-center btn-outline-white prev-song" data-song-id="{{$song->id}}" data-modal-type="lyrics">
                                             <span class="material-symbols-outlined">arrow_back</span>
                                         </button>
 
                                         <div class="btn-group">
-                                            <button id="l_scroll-1x_{{$song->id}}" type="button" class="btn btn-sm border-0 d-flex align-items-center btn-outline-white scroll-control" data-speed="slow">
+                                            <button
+                                                data-bs-toggle="tooltip" data-bs-placement="top"
+                                                data-bs-custom-class="custom-tooltip"
+                                                data-bs-title="Velocidade lenta"
+                                                id="l_scroll-1x_{{$song->id}}" type="button" class="btn btn-sm border-0 d-flex align-items-center btn-outline-white scroll-control" data-speed="slow">
                                                 <span class="material-symbols-outlined">slow_motion_video</span>
                                             </button>
-                                            <button id="l_scroll-1_5x_{{$song->id}}" type="button" class="btn btn-sm border-0 d-flex align-items-center btn-outline-white scroll-control" data-speed="normal">
+                                            <button
+                                                data-bs-toggle="tooltip" data-bs-placement="top"
+                                                data-bs-custom-class="custom-tooltip"
+                                                data-bs-title="Velocidade média"
+                                                id="l_scroll-1_5x_{{$song->id}}" type="button" class="btn btn-sm border-0 d-flex align-items-center btn-outline-white scroll-control" data-speed="normal">
                                                 <span class="material-symbols-outlined">play_arrow</span>
                                             </button>
-                                            <button id="l_scroll-2x_{{$song->id}}" type="button" class="btn btn-sm border-0 d-flex align-items-center btn-outline-white scroll-control" data-speed="fast">
+                                            <button
+                                                data-bs-toggle="tooltip" data-bs-placement="top"
+                                                data-bs-custom-class="custom-tooltip"
+                                                data-bs-title="Velocidade rápida"
+                                                id="l_scroll-2x_{{$song->id}}" type="button" class="btn btn-sm border-0 d-flex align-items-center btn-outline-white scroll-control" data-speed="fast">
                                                 <span class="material-symbols-outlined">fast_forward</span>
                                             </button>
-                                            <button id="l_scroll-stop_{{$song->id}}" type="button" class="btn btn-sm border-0 d-flex align-items-center btn-outline-white scroll-stop">
+                                            <button
+                                                data-bs-toggle="tooltip" data-bs-placement="top"
+                                                data-bs-custom-class="custom-tooltip"
+                                                data-bs-title="Parar scroll"
+                                                id="l_scroll-stop_{{$song->id}}" type="button" class="btn btn-sm border-0 d-flex align-items-center btn-outline-white scroll-stop">
                                                 <span class="material-symbols-outlined">pause</span>
                                             </button>
-                                            <button id="l_scroll-top_{{$song->id}}" type="button" class="btn btn-sm border-0 d-flex align-items-center btn-outline-white scroll-to-top">
+                                            <button
+                                                data-bs-toggle="tooltip" data-bs-placement="top"
+                                                data-bs-custom-class="custom-tooltip"
+                                                data-bs-title="Ir para o topo"
+                                                id="l_scroll-top_{{$song->id}}" type="button" class="btn btn-sm border-0 d-flex align-items-center btn-outline-white scroll-to-top">
                                                 <span class="material-symbols-outlined">keyboard_arrow_up</span>
                                             </button>
                                         </div>
@@ -108,7 +132,11 @@
                                         <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
 
                                         <!-- Botão de navegação para direita -->
-                                        <button id="next-song-lyrics_{{$song->id}}" type="button" class="btn btn-sm border-0 d-flex align-items-center btn-outline-white next-song" data-song-id="{{$song->id}}" data-modal-type="lyrics">
+                                        <button
+                                            data-bs-toggle="tooltip" data-bs-placement="top"
+                                            data-bs-custom-class="custom-tooltip"
+                                            data-bs-title="Ir à próxima música"
+                                            id="next-song-lyrics_{{$song->id}}" type="button" class="btn btn-sm border-0 d-flex align-items-center btn-outline-white next-song" data-song-id="{{$song->id}}" data-modal-type="lyrics">
                                             <span class="material-symbols-outlined">arrow_forward</span>
                                         </button>
                                     </div>
@@ -149,36 +177,81 @@
                                 <div class="modal-footer d-flex justify-content-center bg-primary">
                                     <div class="d-flex gap-md-4 gap-2 align-items-center">
                                         <!-- Botão de navegação para esquerda -->
-                                        <button id="prev-song-chords_{{$song->id}}" type="button" class="btn btn-sm border-0 d-flex align-items-center btn-outline-white prev-song" data-song-id="{{$song->id}}" data-modal-type="chords">
+                                        <button
+                                            data-bs-toggle="tooltip"
+                                            data-bs-placement="top"
+                                            data-bs-custom-class="custom-tooltip"
+                                            data-bs-title="Voltar à música anterior"
+                                            id="prev-song-chords_{{$song->id}}" type="button" class="btn btn-sm border-0 d-flex align-items-center btn-outline-white prev-song" data-song-id="{{$song->id}}" data-modal-type="chords">
                                             <span class="material-symbols-outlined">arrow_back</span>
                                         </button>
 
                                         <div class="btn-group">
-                                            <button id="transpose-down_{{$song->id}}" type="button" class="btn btn-sm border-0 px-1 d-flex align-items-center btn-outline-white transpose-down" data-song-id="{{$song->id}}">
+                                            <button
+                                                data-bs-toggle="tooltip"
+                                                data-bs-placement="top"
+                                                data-bs-custom-class="custom-tooltip"
+                                                data-bs-title="Diminuir meio tom"
+                                                id="transpose-down_{{$song->id}}" type="button" class="btn btn-sm border-0 px-1 d-flex align-items-center btn-outline-white transpose-down" data-song-id="{{$song->id}}">
                                                 <span class="material-symbols-outlined">remove</span>
                                             </button>
-                                            <button id="transpose-up_{{$song->id}}" type="button" class="btn btn-sm border-0 px-1 d-flex align-items-center btn-outline-white transpose-up" data-song-id="{{$song->id}}">
+                                            <button
+                                                data-bs-toggle="tooltip"
+                                                data-bs-placement="top"
+                                                data-bs-custom-class="custom-tooltip"
+                                                data-bs-title="Aumentar meio tom"
+                                                id="transpose-up_{{$song->id}}" type="button" class="btn btn-sm border-0 px-1 d-flex align-items-center btn-outline-white transpose-up" data-song-id="{{$song->id}}">
                                                 <span class="material-symbols-outlined">add</span>
                                             </button>
-                                            <button id="reset-chords_{{$song->id}}" type="button" class="btn btn-sm border-0 px-1 d-flex align-items-center btn-outline-white reset-chords" data-song-id="{{$song->id}}">
+                                            <button
+                                                data-bs-toggle="tooltip"
+                                                data-bs-placement="top"
+                                                data-bs-custom-class="custom-tooltip"
+                                                data-bs-title="Voltar à cifra original"
+                                                id="reset-chords_{{$song->id}}" type="button" class="btn btn-sm border-0 px-1 d-flex align-items-center btn-outline-white reset-chords" data-song-id="{{$song->id}}">
                                                 <span class="material-symbols-outlined">restart_alt</span>
                                             </button>
                                         </div>
 
                                         <div class="btn-group">
-                                            <button id="scroll-1x_{{$song->id}}" type="button" class="btn btn-sm px-sm-1 px-1 border-0 d-flex align-items-center btn-outline-white scroll-control" data-speed="slow" data-song-id="{{$song->id}}">
+                                            <button
+                                                data-bs-toggle="tooltip"
+                                                data-bs-placement="top"
+                                                data-bs-custom-class="custom-tooltip"
+                                                data-bs-title="Velocidade lenta"
+                                                id="scroll-1x_{{$song->id}}" type="button" class="btn btn-sm px-sm-1 px-1 border-0 d-flex align-items-center btn-outline-white scroll-control" data-speed="slow" data-song-id="{{$song->id}}">
                                                 <span class="material-symbols-outlined">slow_motion_video</span>
                                             </button>
-                                            <button id="scroll-1_5x_{{$song->id}}" type="button" class="btn btn-sm px-sm-1 px-1 border-0 d-flex align-items-center btn-outline-white scroll-control" data-speed="normal" data-song-id="{{$song->id}}">
+                                            <button
+                                                data-bs-toggle="tooltip"
+                                                data-bs-placement="top"
+                                                data-bs-custom-class="custom-tooltip"
+                                                data-bs-title="Velocidade média"
+                                                id="scroll-1_5x_{{$song->id}}" type="button" class="btn btn-sm px-sm-1 px-1 border-0 d-flex align-items-center btn-outline-white scroll-control" data-speed="normal" data-song-id="{{$song->id}}">
                                                 <span class="material-symbols-outlined">play_arrow</span>
                                             </button>
-                                            <button id="scroll-2x_{{$song->id}}" type="button" class="btn btn-sm px-sm-1 px-1 border-0 d-flex align-items-center btn-outline-white scroll-control" data-speed="fast" data-song-id="{{$song->id}}">
+                                            <button
+                                                data-bs-toggle="tooltip"
+                                                data-bs-placement="top"
+                                                data-bs-custom-class="custom-tooltip"
+                                                data-bs-title="Velocidade rápida"
+                                                id="scroll-2x_{{$song->id}}" type="button" class="btn btn-sm px-sm-1 px-1 border-0 d-flex align-items-center btn-outline-white scroll-control" data-speed="fast" data-song-id="{{$song->id}}">
                                                 <span class="material-symbols-outlined">fast_forward</span>
                                             </button>
-                                            <button id="scroll-stop_{{$song->id}}" type="button" class="btn btn-sm px-sm-1 px-1 border-0 d-flex align-items-center btn-outline-white scroll-stop" data-song-id="{{$song->id}}">
+                                            <button
+                                                data-bs-toggle="tooltip"
+                                                data-bs-placement="top"
+                                                data-bs-custom-class="custom-tooltip"
+                                                data-bs-title="Parar scroll"
+                                                id="scroll-stop_{{$song->id}}" type="button" class="btn btn-sm px-sm-1 px-1 border-0 d-flex align-items-center btn-outline-white scroll-stop" data-song-id="{{$song->id}}">
                                                 <span class="material-symbols-outlined">pause</span>
                                             </button>
-                                            <button id="scroll-top_{{$song->id}}" type="button" class="btn btn-sm px-sm-1 px-1 border-0 d-flex align-items-center btn-outline-white scroll-to-top" data-song-id="{{$song->id}}">
+                                            <button
+                                                data-bs-toggle="tooltip"
+                                                data-bs-placement="top"
+                                                data-bs-custom-class="custom-tooltip"
+                                                data-bs-title="Ir ao topo"
+                                                id="scroll-top_{{$song->id}}" type="button" class="btn btn-sm px-sm-1 px-1 border-0 d-flex align-items-center btn-outline-white scroll-to-top" data-song-id="{{$song->id}}">
                                                 <span class="material-symbols-outlined">keyboard_arrow_up</span>
                                             </button>
                                         </div>
@@ -186,19 +259,39 @@
                                         @auth
                                             @if(auth()->user()->type_user == 'admin' || auth()->user()->type_user == 'tecnico')
                                             <div class="btn-group d-none">
-                                                <button id="edit-chords_{{$song->id}}" type="button" class="btn btn-sm border-0 d-flex align-items-center btn-outline-white edit-chords-btn" data-song-id="{{$song->id}}">
+                                                <button
+                                                    data-bs-toggle="tooltip"
+                                                    data-bs-placement="top"
+                                                    data-bs-custom-class="custom-tooltip"
+                                                    data-bs-title="Editar cifra"
+                                                    id="edit-chords_{{$song->id}}" type="button" class="btn btn-sm border-0 d-flex align-items-center btn-outline-white edit-chords-btn" data-song-id="{{$song->id}}">
                                                     <span class="material-symbols-outlined">edit</span>
                                                 </button>
-                                                <button id="save-chords_{{$song->id}}" type="button" class="btn btn-sm border-0 align-items-center btn-outline-white save-chords-btn" style="display: none" data-song-id="{{$song->id}}" onclick="beforeSubmit({{$song->id}})">
+                                                <button
+                                                    data-bs-toggle="tooltip"
+                                                    data-bs-placement="top"
+                                                    data-bs-custom-class="custom-tooltip"
+                                                    data-bs-title="Salvar alterações"
+                                                    id="save-chords_{{$song->id}}" type="button" class="btn btn-sm border-0 align-items-center btn-outline-white save-chords-btn" style="display: none" data-song-id="{{$song->id}}" onclick="beforeSubmit({{$song->id}})">
                                                     <span class="material-symbols-outlined">save</span>
                                                 </button>
                                             </div>
                                             @endif
                                         @endauth
 
-                                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                                        <button
+                                            data-bs-toggle="tooltip"
+                                            data-bs-placement="top"
+                                            data-bs-custom-class="custom-tooltip"
+                                            data-bs-title="Fechar"
+                                            type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
 
-                                        <button id="next-song-chords_{{$song->id}}" type="button" class="btn btn-sm border-0 d-flex align-items-center btn-outline-white next-song" data-song-id="{{$song->id}}" data-modal-type="chords">
+                                        <button
+                                            data-bs-toggle="tooltip"
+                                            data-bs-placement="top"
+                                            data-bs-custom-class="custom-tooltip"
+                                            data-bs-title="Ir à próxima música"
+                                            id="next-song-chords_{{$song->id}}" type="button" class="btn btn-sm border-0 d-flex align-items-center btn-outline-white next-song" data-song-id="{{$song->id}}" data-modal-type="chords">
                                             <span class="material-symbols-outlined">arrow_forward</span>
                                         </button>
                                     </div>

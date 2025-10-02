@@ -251,14 +251,23 @@
                 <div class="d-flex gap-md-4 gap-3 align-items-center">
                     <div class="btn-group">
                         <button id="transpose-down" type="button"
+                            data-bs-toggle="tooltip" data-bs-placement="top"
+                            data-bs-custom-class="custom-tooltip"
+                            data-bs-title="Abaixar meio tom"
                             class="btn btn-sm border-0 d-flex align-items-center btn-outline-white transpose-down">
                             <span class="material-symbols-outlined">remove</span>
                         </button>
                         <button id="transpose-up" type="button"
+                            data-bs-toggle="tooltip" data-bs-placement="top"
+                            data-bs-custom-class="custom-tooltip"
+                            data-bs-title="Aumentar meio tom"
                             class="btn btn-sm border-0 d-flex align-items-center btn-outline-white transpose-up">
                             <span class="material-symbols-outlined">add</span>
                         </button>
                         <button id="reset-chords" type="button"
+                        data-bs-toggle="tooltip" data-bs-placement="top"
+                            data-bs-custom-class="custom-tooltip"
+                            data-bs-title="Voltar ao tom original"
                             class="btn btn-sm border-0 d-flex align-items-center btn-outline-white transpose-up">
                             <span class="material-symbols-outlined">restart_alt</span>
                         </button>
@@ -266,25 +275,40 @@
 
                     <div class="btn-group">
                         <button id="scroll-1x" type="button"
+                            data-bs-toggle="tooltip" data-bs-placement="top"
+                            data-bs-custom-class="custom-tooltip"
+                            data-bs-title="Velocidade lenta"
                             class="btn btn-sm px-sm-1 px-1 border-0 d-flex align-items-center btn-outline-white scroll-control"
                             data-speed="slow">
                             <span class="material-symbols-outlined">slow_motion_video</span>
                         </button>
                         <button id="scroll-1_5x" type="button"
+                            data-bs-toggle="tooltip" data-bs-placement="top"
+                            data-bs-custom-class="custom-tooltip"
+                            data-bs-title="Velocidade média"
                             class="btn btn-sm px-sm-1 px-1 border-0 d-flex align-items-center btn-outline-white scroll-control"
                             data-speed="normal">
                             <span class="material-symbols-outlined">play_arrow</span>
                         </button>
                         <button id="scroll-2x" type="button"
+                            data-bs-toggle="tooltip" data-bs-placement="top"
+                            data-bs-custom-class="custom-tooltip"
+                            data-bs-title="Velocidade rápida"
                             class="btn btn-sm px-sm-1 px-1 border-0 d-flex align-items-center btn-outline-white scroll-control"
                             data-speed="fast">
                             <span class="material-symbols-outlined">fast_forward</span>
                         </button>
                         <button id="scroll-stop" type="button"
+                            data-bs-toggle="tooltip" data-bs-placement="top"
+                            data-bs-custom-class="custom-tooltip"
+                            data-bs-title="Parar scroll"
                             class="btn btn-sm px-sm-1 px-1 border-0 d-flex align-items-center btn-outline-white scroll-stop">
                             <span class="material-symbols-outlined">pause</span>
                         </button>
                         <button id="scroll-top" type="button"
+                            data-bs-toggle="tooltip" data-bs-placement="top"
+                            data-bs-custom-class="custom-tooltip"
+                            data-bs-title="Ir para o topo"
                             class="btn btn-sm px-sm-1 px-1 border-0 d-flex align-items-center btn-outline-white scroll-to-top">
                             <span class="material-symbols-outlined">keyboard_arrow_up</span>
                         </button>
@@ -294,10 +318,17 @@
 
                         @if(auth()->user()->type_user == 'admin' || auth()->user()->type_user == 'tecnico')
                         <div class="btn-group">
-                            <button id="edit-chords" type="button" class="btn btn-sm border-0 d-flex align-items-center btn-outline-white edit-chords-btn">
+                            <button
+                                data-bs-toggle="tooltip" data-bs-placement="top"
+                                data-bs-custom-class="custom-tooltip"
+                                data-bs-title="Editar cifra"
+                                id="edit-chords" type="button" class="btn btn-sm border-0 d-flex align-items-center btn-outline-white edit-chords-btn">
                                 <span class="material-symbols-outlined">edit</span>
                             </button>
                             <button id="save-chords" type="button"
+                                data-bs-toggle="tooltip" data-bs-placement="top"
+                                data-bs-custom-class="custom-tooltip"
+                                data-bs-title="Salvar alterações"
                                 class="btn btn-sm border-0 align-items-center btn-outline-white save-chords-btn" style="display: none"
                                 onclick="beforeSubmit()">
                                 <span class="material-symbols-outlined">save</span>
@@ -305,7 +336,11 @@
                         </div>
                         @endif
                     @endauth
-                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                    <button
+                        data-bs-toggle="tooltip" data-bs-placement="top"
+                        data-bs-custom-class="custom-tooltip"
+                        data-bs-title="Fechar"
+                        type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
             </div>
 
