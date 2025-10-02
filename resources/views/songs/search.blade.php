@@ -54,7 +54,7 @@
         </div>
         <div class="card-body filters" style="padding: 0 1.5rem">
             <div class="row g-3 mb-3">
-                <div class="col-md-2">
+                <div class="col-md-2 col-6">
                     <label class="form-label text-muted">Categoria</label>
                     <select name="category" id="categoryFilter" class="form-select form-select-sm">
                         <option value="">Todas as categorias</option>
@@ -64,7 +64,7 @@
                     </select>
                 </div>
 
-                <div class="col-md-2">
+                <div class="col-md-2 col-6">
                     <label class="form-label text-muted">Tipo</label>
                     <select name="type" id="typeFilter" class="form-select form-select-sm">
                         <option value="">Todos os tipos</option>
@@ -75,7 +75,7 @@
                     </select>
                 </div>
 
-                <div class="col-md-2">
+                <div class="col-md-2 col-6">
                     <label class="form-label text-muted">Tom</label>
                     <select name="tone" id="toneFilter" class="form-select form-select-sm">
                         <option value="">Todos os tons</option>
@@ -92,7 +92,7 @@
                     </select>
                 </div>
 
-                <div class="col-md-2">
+                <div class="col-md-2 col-6">
                     <label class="form-label text-muted">Intensidade</label>
                     <select name="intensity" id="intensityFilter" class="form-select form-select-sm">
                         <option value="">Todas as intensidades</option>
@@ -102,7 +102,7 @@
                     </select>
                 </div>
 
-                <div class="col-md-2">
+                <div class="col-md-2 col-6">
                     <label class="form-label text-muted">Ordenar por</label>
                     <select name="sort" id="sortFilter" class="form-select form-select-sm">
                         <option value="title">Título (A-Z)</option>
@@ -114,7 +114,7 @@
                     </select>
                 </div>
 
-                <div class="col-md-2">
+                <div class="col-md-2 col-6">
                     <label class="form-label text-muted">Compasso</label>
                     <select name="tempo" id="tempoFilter" class="form-select form-select-sm">
                         <option value="">Todos os compassos</option>
