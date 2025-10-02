@@ -6,6 +6,9 @@
 
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
+    <meta name="application-name" content="{{ config('app.name', 'Laravel') }}">
+    <meta name="description" content="Sistema de Gerenciamento de Louvor e Adoração">
+    <meta name="robots" content="noindex">
 
     <title>{{ config('app.name', 'Laravel') }}</title>
 
