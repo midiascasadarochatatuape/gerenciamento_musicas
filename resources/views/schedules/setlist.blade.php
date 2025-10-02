@@ -174,8 +174,8 @@
                                     </div>
 
                                 </div>
-                                <div class="modal-footer d-flex justify-content-center bg-primary">
-                                    <div class="d-flex gap-md-4 gap-2 align-items-center">
+                                <div class="modal-footer d-flex justify-content-md-center justify-content-start bg-primary px-1">
+                                    <div class="d-flex gap-md-4 @if(auth()->user()->type_user == 'admin' || auth()->user()->type_user == 'tecnico') gap-0 @else gap-2 @endif align-items-center">
                                         <!-- Botão de navegação para esquerda -->
                                         <button
                                             data-bs-toggle="tooltip"
