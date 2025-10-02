@@ -112,7 +112,7 @@ $line-height-base: 1.6;
 body {
     background-color: $body-bg;
     font-family: $font-family-sans-serif;
-    font-size: $font-size-base;
+    font-size: clamp(.65rem, 2vw + .8rem, .95rem);
     line-height: $line-height-base;
     color: $dark;
     -webkit-font-smoothing: antialiased;
@@ -243,6 +243,9 @@ h1, h2, h3, h4, h5, h6 {
     .card-body {
       color: #555;
       padding: 1.5rem;
+      @media screen and (max-width: 768px) {
+          padding: .7rem;
+      }
     }
 
     .card-title {
@@ -485,7 +488,7 @@ input[type="radio"] {
 .play {
     font-size: 3rem;
     @media screen and (max-width: 768px) {
-        font-size: 4.5rem;
+        font-size: 3rem;
     }
     transition: all 0.3s ease;
 }
@@ -502,7 +505,7 @@ input[type="radio"] {
 }
 
 .filters.show {
-    max-height: 500px;
+    max-height: 800px;
     transition: max-height 0.3s ease-in;
     overflow: inherit;
 }
@@ -544,7 +547,6 @@ input[type="radio"] {
     @media screen and (max-width: 768px) {
         padding-top: 0.5rem!important;
         padding-bottom: 0.5rem!important;
-        font-size: 1rem;
     }
   }
 

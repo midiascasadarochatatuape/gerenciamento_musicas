@@ -44,7 +44,7 @@
                                     <a class="nav-link link-lighter" href="{{ route('home') }}">{{ __('Visão geral') }}</a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link link-lighter" href="{{ route('song.index') }}">{{ __('Músicas') }}</a>
+                                    <a class="nav-link link-lighter" href="{{ route('songs.index') }}">{{ __('Músicas') }}</a>
                                 </li>
                                 <li class="nav-item">
                                     <a class="nav-link link-lighter" href="{{ route('schedule.index') }}">{{ __('Escalas') }}</a>

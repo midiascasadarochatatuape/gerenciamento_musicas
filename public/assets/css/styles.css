@@ -13730,7 +13730,7 @@ textarea.form-control-lg {
 body {
   background-color: #f8fafc;
   font-family: "Nunito", sans-serif;
-  font-size: 1rem;
+  font-size: clamp(0.65rem, 2vw + 0.8rem, 0.95rem);
   line-height: 1.6;
   color: #343a40;
   -webkit-font-smoothing: antialiased;
@@ -13849,6 +13849,11 @@ h1, .h1, h2, .h2, h3, .h3, h4, .h4, h5, .h5, h6, .h6 {
 .card .card-body {
   color: #555;
   padding: 1.5rem;
+}
+@media screen and (max-width: 768px) {
+  .card .card-body {
+    padding: 0.7rem;
+  }
 }
 .card .card-title {
   font-weight: 700;
@@ -14069,7 +14074,7 @@ input[type=radio] {
 }
 @media screen and (max-width: 768px) {
   .play {
-    font-size: 4.5rem;
+    font-size: 3rem;
   }
 }
 
@@ -14085,7 +14090,7 @@ input[type=radio] {
 }
 
 .filters.show {
-  max-height: 500px;
+  max-height: 800px;
   transition: max-height 0.3s ease-in;
   overflow: inherit;
 }
@@ -14138,7 +14143,6 @@ input[type=radio] {
   .py-03 {
     padding-top: 0.5rem !important;
     padding-bottom: 0.5rem !important;
-    font-size: 1rem;
   }
 }
 

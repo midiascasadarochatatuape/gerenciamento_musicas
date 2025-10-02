@@ -4,19 +4,31 @@
 <div class="container">
     <div class="w-100 mb-4 d-flex justify-content-between align-items-center flex-md-row flex-column gap-md-0 gap-4">
         <div class="d-flex flex-shrink-0">
-            <h2 class="m-0">Todas as Músicas</h2>
+            <h2 class="m-0">Músicas</h2>
         </div>
 
         <div class="d-flex flex-shrink-0 gap-2 flex-md-row flex-column">
-            <a href="{{ route('songs.index') }}" class="btn btn-sm px-4 rounded-pill btn-outline-primary d-flex align-items-center">
-                <span class="material-symbols-outlined me-1" style="font-size: 16px;">grid_view</span>
-                Ver com Paginação
-            </a>
             @if (auth()->check() && auth()->user()->type_user === 'admin')
                 @can('create', App\Models\Song::class)
                     <a href="{{ route('songs.create') }}" class="btn btn-sm px-4 rounded-pill btn-primary d-flex align-items-center">Nova Música</a>
                 @endcan
             @endif
+        </div>
+    </div>
+
+    <!-- Busca sempre visível -->
+    <div class="card mb-4 position-relative" style="z-index: 10;">
+        <div class="card-body">
+            <form id="searchForm" class="form-group position-relative m-0">
+                @csrf
+                <input type="text" class="form-control rounded-pill" id="search" name="search" placeholder="Buscar por título, autor ou referência bíblica..." autocomplete="off">
+                <div id="searchResults" class="position-absolute px-3 shadow mt-1 bg-white d-none searchdiv z-10"></div>
+                <div id="searchSpinner" class="position-absolute searchspinner">
+                    <div class="spinner-border spinner-border-sm text-primary" role="status">
+                        <span class="visually-hidden">Buscando...</span>
+                    </div>
+                </div>
+            </form>
         </div>
     </div>
 
@@ -30,13 +42,12 @@
                     <span class="material-symbols-outlined chevron-icon">chevron_right</span>
                 </a>
                 <div class="d-flex gap-2">
-                    <button type="button" id="applyFilters" class="btn btn-primary btn-sm px-4 d-flex align-items-center">
+                    {{-- <button type="button" id="applyFilters" class="btn btn-primary btn-sm px-4 d-flex align-items-center">
                         <span class="material-symbols-outlined me-1" style="font-size: 16px;">search</span>
                         Filtrar
-                    </button>
-                    <button type="button" id="clearFilters" class="btn btn-outline-secondary btn-sm px-4 d-flex align-items-center">
-                        <span class="material-symbols-outlined me-1" style="font-size: 16px;">clear</span>
-                        Limpar
+                    </button> --}}
+                    <button type="button" id="clearFilters" class="btn btn-gray btn-sm px-4 d-flex align-items-center">
+                        Limpar filtros
                     </button>
                 </div>
             </div>
@@ -274,6 +285,86 @@
 </div>
 
 <script>
+// Funcionalidade de busca com dropdown
+document.addEventListener('DOMContentLoaded', function() {
+    const searchForm = document.getElementById('searchForm');
+    const searchInput = document.getElementById('search');
+    const searchResults = document.getElementById('searchResults');
+    const searchSpinner = document.getElementById('searchSpinner');
+    let timeoutId;
+
+    searchInput.addEventListener('input', function() {
+        clearTimeout(timeoutId);
+        const query = this.value.trim();
+
+        if (query.length < 2) {
+            searchResults.classList.add('d-none');
+            searchSpinner.style.display = 'none';
+            return;
+        }
+        searchSpinner.style.display = 'block';
+
+        timeoutId = setTimeout(() => {
+            const params = new URLSearchParams();
+            params.set('search', query);
+
+            fetch(`{{ route('songs.ajax.search') }}?${params.toString()}`, {
+                method: 'GET',
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest'
+                }
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Erro na busca');
+                }
+                return response.json();
+            })
+            .then(data => {
+                searchResults.innerHTML = '';
+                searchResults.classList.remove('d-none');
+
+                if (data.length === 0) {
+                    searchResults.innerHTML = '<div class="p-3">Nenhuma música encontrada</div>';
+                    return;
+                }
+
+                data.forEach(song => {
+                    const div = document.createElement('div');
+                    div.className = 'p-3 border-bottom search-item';
+                    div.innerHTML = `
+                        <a href="/songs/${song.id}" class="text-decoration-none">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    <h6 class="mb-0">${song.title}</h6>
+                                    ${song.version ? `<small class="text-muted">${song.version}</small>` : ''}
+                                </div>
+                                ${song.biblical_reference ? `<small class="badge bg-secondary">${song.biblical_reference}</small>` : ''}
+                            </div>
+                        </a>
+                    `;
+                    searchResults.appendChild(div);
+                });
+            })
+            .catch(error => {
+                searchResults.innerHTML = '<div class="p-3 text-danger">Erro ao realizar a busca</div>';
+                searchResults.classList.remove('d-none');
+                console.error('Erro:', error);
+            })
+            .finally(() => {
+                searchSpinner.style.display = 'none';
+            });
+        }, 300);
+    });
+
+    document.addEventListener('click', function(e) {
+        if (!searchForm.contains(e.target)) {
+            searchResults.classList.add('d-none');
+        }
+    });
+});
+
+// Script principal da página
 document.addEventListener('DOMContentLoaded', function() {
     let currentPage = 1;
     let loading = false;
@@ -292,10 +383,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const toggleButton = document.getElementById('toggleFilters');
     const filtersDiv = document.querySelector('.filters');
     const chevronIcon = toggleButton.querySelector('.chevron-icon');
-    const applyFiltersBtn = document.getElementById('applyFilters');
-    const clearFiltersBtn = document.getElementById('clearFilters');
-
-    // Configurar Intersection Observer para scroll infinito
+    const clearFiltersBtn = document.getElementById('clearFilters');    // Configurar Intersection Observer para scroll infinito
     const observer = new IntersectionObserver((entries) => {
         if (entries[0].isIntersecting && hasMore && !loading) {
             loadMoreSongs();
@@ -542,8 +630,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
             }
         });
-
-        console.log('Filtros coletados:', activeFilters); // Debug
     }
 
     // Aplicar filtros automáticos nos selects
@@ -568,37 +654,35 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 
-    // Aplicar filtros (botão)
-    applyFiltersBtn.addEventListener('click', function() {
-        collectActiveFilters();
-        resetAndReload();
-    });
-
     // Limpar filtros
-    clearFiltersBtn.addEventListener('click', function() {
-        // Limpar selects
-        document.querySelectorAll('.filters select').forEach(select => {
-            select.value = '';
+    if (clearFiltersBtn) {
+        clearFiltersBtn.addEventListener('click', function() {
+            // Limpar selects
+            document.querySelectorAll('.filters select').forEach(select => {
+                select.value = '';
+            });
+
+            // Limpar botões alfabéticos
+            document.querySelectorAll('.alphabet-btn').forEach(btn => {
+                btn.classList.remove('btn-primary');
+                btn.classList.add('btn-outline-primary');
+            });
+
+            // Limpar filtros ativos
+            activeFilters = {};
+
+            // Fechar filtros
+            if (filtersDiv) {
+                filtersDiv.classList.remove('show');
+            }
+            if (chevronIcon) {
+                chevronIcon.classList.remove('rotate');
+            }
+
+            // Recarregar sem filtros
+            resetAndReload();
         });
-
-        // Limpar botões alfabéticos
-        document.querySelectorAll('.alphabet-btn').forEach(btn => {
-            btn.classList.remove('btn-primary');
-            btn.classList.add('btn-outline-primary');
-        });
-
-        // Limpar filtros ativos
-        activeFilters = {};
-
-        // Fechar filtros
-        filtersDiv.classList.remove('show');
-        chevronIcon.classList.remove('rotate');
-
-        // Recarregar sem filtros
-        resetAndReload();
-    });
-
-    // Botões alfabéticos
+    }    // Botões alfabéticos
     document.querySelectorAll('.alphabet-btn').forEach(btn => {
         btn.addEventListener('click', function() {
             // Mostrar os filtros se não estiverem visíveis
@@ -662,8 +746,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 page: 1,
                 ...activeFilters
             });
-
-            console.log('Aplicando filtros:', activeFilters); // Debug
 
             const response = await fetch(`{{ route('songs.all') }}?${params}`, {
                 headers: {
@@ -885,6 +967,27 @@ select:disabled {
 .alphabet-btn.btn-primary {
     transform: translateY(-2px);
     box-shadow: 0 4px 8px rgba(0,123,255,0.3);
+}
+
+/* Estilos para o searchForm */
+.searchdiv {
+    width: calc(100% - 2rem);
+    max-height: 300px;
+    overflow-y: auto;
+    border-radius: 0.5rem;
+    border: 1px solid rgba(0,0,0,0.1);
+    z-index: 1000;
+}
+
+.search-item:hover {
+    background-color: #f8f9fa;
+}
+
+.searchspinner {
+    right: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    display: none;
 }
 </style>
 

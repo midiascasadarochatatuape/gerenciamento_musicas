@@ -56,7 +56,7 @@ class SongController extends Controller
 
         // Filtro por compasso/tempo
         if ($request->filled('tempo')) {
-            $query->where('tempo', $request->tempo);
+            $query->where('measure', $request->tempo);
         }
 
         // Aplicar ordenação
@@ -83,14 +83,106 @@ class SongController extends Controller
                 break;
         }
 
-        $songs = $query->where('status', 7)->paginate(15);
+        $songs = $query->where('status', 7)->paginate(8);
 
         // Manter os parâmetros da URL na paginação
         $songs->appends($request->query());
 
         $categories = Category::all();
 
+        // Se for uma requisição AJAX, retornar JSON para scroll infinito
+        if ($request->ajax()) {
+            return response()->json([
+                'songs' => $songs->items(),
+                'hasMore' => $songs->hasMorePages(),
+                'currentPage' => $songs->currentPage(),
+                'totalSongs' => $songs->total()
+            ]);
+        }
+
         return view('songs.index', compact('songs', 'categories'));
+    }
+
+    public function searchPage(Request $request)
+    {
+        $query = Song::query();
+
+        // Busca por texto (título, versão, referência bíblica)
+        if ($request->filled('search')) {
+            $searchTerm = $request->search;
+            $query->where(function($q) use ($searchTerm) {
+                $q->where('title', 'like', '%' . $searchTerm . '%')
+                  ->orWhere('version', 'like', '%' . $searchTerm . '%')
+                  ->orWhere('bible_reference', 'like', '%' . $searchTerm . '%');
+            });
+        }
+
+        // Filtro por categoria
+        if ($request->filled('category')) {
+            $query->whereHas('categories', function($q) use ($request) {
+                $q->where('categories.id', $request->category)
+                  ->where('type', 'category');
+            });
+        }
+
+        // Filtro por tipo
+        if ($request->filled('type')) {
+            $query->where('type', $request->type);
+        }
+
+        // Filtro por tom
+        if ($request->filled('tone')) {
+            $query->where('tone', $request->tone);
+        }
+
+        // Filtro por intensidade
+        if ($request->filled('intensity')) {
+            $query->where('intensity', $request->intensity);
+        }
+
+        // Filtro por compasso/tempo
+        if ($request->filled('tempo')) {
+            $query->where('measure', $request->tempo);
+        }
+
+        // Aplicar ordenação
+        $sortBy = $request->get('sort', 'title');
+        switch ($sortBy) {
+            case 'title_desc':
+                $query->orderBy('title', 'desc');
+                break;
+            case 'times':
+                $query->orderBy('times', 'desc');
+                break;
+            case 'times_asc':
+                $query->orderBy('times', 'asc');
+                break;
+            case 'created_at':
+                $query->orderBy('created_at', 'desc');
+                break;
+            case 'created_at_asc':
+                $query->orderBy('created_at', 'asc');
+                break;
+            case 'title':
+            default:
+                $query->orderBy('title', 'asc');
+                break;
+        }
+
+        $songs = $query->where('status', 7)->paginate(8);
+        $categories = Category::all();
+
+        // Se for uma requisição AJAX, retornar JSON para scroll infinito
+        if ($request->ajax()) {
+            return response()->json([
+                'songs' => $songs->items(),
+                'hasMore' => $songs->hasMorePages(),
+                'currentPage' => $songs->currentPage(),
+                'totalSongs' => $songs->total()
+            ]);
+        }
+
+        return view('songs.search', compact('songs', 'categories'));
     }
 
     public function show(Song $song)
@@ -266,7 +358,7 @@ class SongController extends Controller
         $songs = Song::with('user:id,name')
             ->where(function($query) use ($search) {
                 $query->where('title', 'like', '%' . $search . '%')
-                      ->orWhere('bible_reference', 'like', '%' . $search . '%')
+                      ->orWhere('biblical_reference', 'like', '%' . $search . '%')
                       ->orWhere('version', 'like', '%' . $search . '%')
                       ->orWhereHas('user', function($q) use ($search) {
                           $q->where('name', 'like', '%' . $search . '%');
@@ -274,7 +366,7 @@ class SongController extends Controller
             })
             ->where('status', 7) // Apenas músicas aprovadas
             ->limit(15)
-            ->get(['id', 'title', 'version', 'tone', 'bible_reference', 'id_user']);
+            ->get(['id', 'title', 'version', 'tone', 'biblical_reference', 'id_user']);
 
         return response()->json($songs);
     }
@@ -285,7 +377,7 @@ class SongController extends Controller
         $perPage = 8;
         $offset = ($page - 1) * $perPage;
 
-        $query = Song::where('status', 7)->orderBy('title', 'asc');
+        $query = Song::where('status', 7);
 
         // Aplicar filtros se fornecidos
         if ($request->filled('letter')) {
@@ -317,8 +409,11 @@ class SongController extends Controller
         }
 
         if ($request->filled('tempo')) {
-            $query->where('tempo', $request->tempo);
+            $query->where('measure', $request->tempo);
         }
+
+        // Contar total antes de aplicar ordenação e paginação
+        $totalSongs = $query->count();
 
         // Aplicar ordenação
         $sortBy = $request->get('sort', 'title');
@@ -344,7 +439,6 @@ class SongController extends Controller
                 break;
         }
 
-        $totalSongs = $query->count();
         $songs = $query->offset($offset)->limit($perPage)->get();
 
         $hasMore = ($offset + $perPage) < $totalSongs;
@@ -361,6 +455,92 @@ class SongController extends Controller
         $categories = Category::all();
 
         return view('songs.all', compact('songs', 'categories', 'hasMore', 'totalSongs'));
+    }
+
+    public function searchSongs(Request $request)
+    {
+        $page = $request->get('page', 1);
+        $perPage = 8;
+        $offset = ($page - 1) * $perPage;
+
+        $query = Song::where('status', 7);
+
+        // Aplicar filtros se fornecidos
+        if ($request->filled('letter')) {
+            $letter = $request->letter;
+            if ($letter === '#') {
+                $query->where('title', 'regexp', '^[0-9]');
+            } else {
+                $query->where('title', 'like', $letter . '%');
+            }
+        }
+
+        if ($request->filled('category')) {
+            $query->whereHas('categories', function($q) use ($request) {
+                $q->where('categories.id', $request->category)
+                  ->where('type', 'category');
+            });
+        }
+
+        if ($request->filled('type')) {
+            $query->where('type', $request->type);
+        }
+
+        if ($request->filled('tone')) {
+            $query->where('tone', $request->tone);
+        }
+
+        if ($request->filled('intensity')) {
+            $query->where('intensity', $request->intensity);
+        }
+
+        if ($request->filled('tempo')) {
+            $query->where('measure', $request->tempo);
+        }
+
+        // Contar total antes de aplicar ordenação e paginação
+        $totalSongs = $query->count();
+
+        // Aplicar ordenação
+        $sortBy = $request->get('sort', 'title');
+        switch ($sortBy) {
+            case 'title_desc':
+                $query->orderBy('title', 'desc');
+                break;
+            case 'times':
+                $query->orderBy('times', 'desc');
+                break;
+            case 'times_asc':
+                $query->orderBy('times', 'asc');
+                break;
+            case 'created_at':
+                $query->orderBy('created_at', 'desc');
+                break;
+            case 'created_at_asc':
+                $query->orderBy('created_at', 'asc');
+                break;
+            case 'title':
+            default:
+                $query->orderBy('title', 'asc');
+                break;
+        }
+
+        $songs = $query->offset($offset)->limit($perPage)->get();
+
+        $hasMore = ($offset + $perPage) < $totalSongs;
+
+        if ($request->ajax()) {
+            return response()->json([
+                'songs' => $songs,
+                'hasMore' => $hasMore,
+                'currentPage' => $page,
+                'totalSongs' => $totalSongs
+            ]);
+        }
+
+        $categories = Category::all();
+
+        return view('songs.search', compact('songs', 'categories', 'hasMore', 'totalSongs'));
     }
 
     public function searchByBibleReference(Request $request)
