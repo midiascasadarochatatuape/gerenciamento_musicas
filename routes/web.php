@@ -23,6 +23,7 @@ Route::middleware(['auth'])->group(function () {
 Auth::routes();
 
 Route::resource('songs', SongController::class);
+Route::get('/songs-all', [SongController::class, 'allSongs'])->name('songs.all');
 Route::middleware(['auth'])->group(function () {
     Route::resource('group', GroupController::class);
     Route::get('/songs/create/suggestion', [SongController::class, 'createSuggestion'])->name('songs.create.suggestion');

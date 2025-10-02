@@ -7,8 +7,12 @@
             <h2 class="m-0">Músicas</h2>
         </div>
 
-        <div class="d-flex flex-shrink-0">
-            @if (auth()->user()->type_user === 'admin')
+        <div class="d-flex flex-shrink-0 gap-2">
+            <a href="{{ route('songs.all') }}" class="btn btn-sm px-4 rounded-pill btn-outline-primary d-flex align-items-center">
+                <span class="material-symbols-outlined me-1" style="font-size: 16px;">view_stream</span>
+                Ver todas as músicas
+            </a>
+            @if (auth()->check() && auth()->user()->type_user === 'admin')
                 @can('create', App\Models\Song::class)
                     <a href="{{ route('songs.create') }}" class="btn btn-sm px-4 rounded-pill btn-primary">Nova Música</a>
                 @endcan
