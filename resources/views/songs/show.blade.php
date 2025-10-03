@@ -183,19 +183,39 @@
                 <div class="d-flex gap-4 align-items-center">
 
                     <div class="btn-group">
-                        <button id="l_scroll-1x" type="button" class="btn btn-sm border-0 d-flex align-items-center btn-outline-white scroll-control" data-speed="slow">
+                        <button
+                            data-bs-toggle="tooltip" data-bs-placement="top"
+                            data-bs-custom-class="custom-tooltip"
+                            data-bs-title="Velocidade lenta"
+                            id="l_scroll-1x" type="button" class="btn btn-sm border-0 d-flex align-items-center btn-outline-white scroll-control" data-speed="slow">
                             <span class="material-symbols-outlined">slow_motion_video</span>
                         </button>
-                        <button id="l_scroll-1_5x" type="button" class="btn btn-sm border-0 d-flex align-items-center btn-outline-white scroll-control" data-speed="normal">
+                        <button
+                            data-bs-toggle="tooltip" data-bs-placement="top"
+                            data-bs-custom-class="custom-tooltip"
+                            data-bs-title="Velocidade média"
+                            id="l_scroll-1_5x" type="button" class="btn btn-sm border-0 d-flex align-items-center btn-outline-white scroll-control" data-speed="normal">
                             <span class="material-symbols-outlined">play_arrow</span>
                         </button>
-                        <button id="l_scroll-2x" type="button" class="btn btn-sm border-0 d-flex align-items-center btn-outline-white scroll-control" data-speed="fast">
+                        <button
+                            data-bs-toggle="tooltip" data-bs-placement="top"
+                            data-bs-custom-class="custom-tooltip"
+                            data-bs-title="Velocidade rápida"
+                            id="l_scroll-2x" type="button" class="btn btn-sm border-0 d-flex align-items-center btn-outline-white scroll-control" data-speed="fast">
                             <span class="material-symbols-outlined">fast_forward</span>
                         </button>
-                        <button id="l_scroll-stop" type="button" class="btn btn-sm border-0 d-flex align-items-center btn-outline-white scroll-stop">
+                        <button
+                            data-bs-toggle="tooltip" data-bs-placement="top"
+                            data-bs-custom-class="custom-tooltip"
+                            data-bs-title="Parar scroll"
+                            id="l_scroll-stop" type="button" class="btn btn-sm border-0 d-flex align-items-center btn-outline-white scroll-stop">
                             <span class="material-symbols-outlined">pause</span>
                         </button>
-                        <button id="l_scroll-top" type="button" class="btn btn-sm border-0 d-flex align-items-center btn-outline-white scroll-to-top">
+                        <button
+                            data-bs-toggle="tooltip" data-bs-placement="top"
+                            data-bs-custom-class="custom-tooltip"
+                            data-bs-title="Ir para o topo"
+                            id="l_scroll-top" type="button" class="btn btn-sm border-0 d-flex align-items-center btn-outline-white scroll-to-top">
                             <span class="material-symbols-outlined">keyboard_arrow_up</span>
                         </button>
                     </div>
@@ -203,17 +223,29 @@
                     @auth
                         @if(auth()->user()->type_user == 'admin' || auth()->user()->type_user == 'tecnico')
                         <div class="btn-group">
-                            <button id="edit_lyrics" type="button" class="btn btn-sm border-0 d-flex align-items-center btn-outline-white edit-lyrics-btn">
+                            <button
+                                data-bs-toggle="tooltip" data-bs-placement="top"
+                                data-bs-custom-class="custom-tooltip"
+                                data-bs-title="Editar letra"
+                                id="edit_lyrics" type="button" class="btn btn-sm border-0 d-flex align-items-center btn-outline-white edit-lyrics-btn">
                                 <span class="material-symbols-outlined">edit</span>
                             </button>
-                            <button id="save_lyrics" type="button" class="btn btn-sm border-0 d-flex align-items-center btn-outline-white save-lyrics-btn d-none"
+                            <button
+                                data-bs-toggle="tooltip" data-bs-placement="top"
+                                data-bs-custom-class="custom-tooltip"
+                                data-bs-title="Salvar alterações"
+                                id="save_lyrics" type="button" class="btn btn-sm border-0 d-flex align-items-center btn-outline-white save-lyrics-btn d-none"
                                     onclick="lyricSubmit()">
                                 <span class="material-symbols-outlined">save</span>
                             </button>
                         </div>
                         @endif
                     @endauth
-                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                    <button
+                        data-bs-toggle="tooltip" data-bs-placement="top"
+                        data-bs-custom-class="custom-tooltip"
+                        data-bs-title="Fechar"
+                        type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
             </div>
         </div>

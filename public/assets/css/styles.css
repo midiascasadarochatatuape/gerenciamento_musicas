@@ -14444,4 +14444,21 @@ input[type=radio] {
   max-width: 180px;
 }
 
+.tooltip-inner {
+  background-color: #1DB954;
+  color: #000;
+  font-size: 14px;
+  font-weight: bold;
+}
+
+.bs-tooltip-top .tooltip-arrow::before, .bs-tooltip-auto[data-popper-placement^=top] .tooltip-arrow::before {
+  top: -1px;
+  border-width: var(--bs-tooltip-arrow-height) calc(var(--bs-tooltip-arrow-width) * 0.5) 0;
+  border-top-color: #1DB954;
+}
+
+.tooltip-arrow {
+  color: #1DB954;
+}
+
 /*# sourceMappingURL=styles.css.map */

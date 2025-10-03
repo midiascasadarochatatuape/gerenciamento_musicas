@@ -843,3 +843,20 @@ input[type="radio"] {
 .text-truncate {
     max-width: 180px;
 }
+
+
+.tooltip-inner {
+  background-color: $green;
+  color: #000;
+  font-size: 14px;
+  font-weight: bold;
+}
+
+.bs-tooltip-top .tooltip-arrow::before, .bs-tooltip-auto[data-popper-placement^=top] .tooltip-arrow::before {
+    top: -1px;
+    border-width: var(--bs-tooltip-arrow-height) calc(var(--bs-tooltip-arrow-width) * 0.5) 0;
+    border-top-color: $green;
+}
+.tooltip-arrow {
+  color: $green;
+}
