@@ -156,6 +156,10 @@
 
         // Função para redirecionar diretamente para login
         function redirectToLogin() {
+            // Limpar qualquer estado de logout antes de redirecionar
+            if (window.location.pathname.includes('logout')) {
+                window.history.replaceState(null, '', '/');
+            }
             window.location.href = '{{ route("login") }}';
         }
 
@@ -207,6 +211,14 @@
                     e.preventDefault();
                     redirectToLogin();
                 }
+            }
+        });
+
+        // Verificar se estamos numa rota problemática ao carregar a página
+        document.addEventListener('DOMContentLoaded', function() {
+            if (window.location.pathname === '/logout' && !document.querySelector('form[action*="logout"]')) {
+                // Se estamos na rota logout mas não há formulário de logout, redirecionar
+                redirectToLogin();
             }
         });
     })();

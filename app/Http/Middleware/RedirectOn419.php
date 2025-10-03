@@ -26,7 +26,12 @@ class RedirectOn419
                 return response()->json(['message' => 'Session expired'], 419);
             }
 
-            // Para requisições normais, redireciona para login
+            // Se estiver tentando acessar logout via GET, redireciona para login
+            if ($request->is('logout') && $request->method() === 'GET') {
+                return redirect()->route('login');
+            }
+
+            // Para outras requisições normais, redireciona para login
             return redirect()->route('login');
         }
     }

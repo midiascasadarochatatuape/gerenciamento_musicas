@@ -11,6 +11,11 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\DevocionalController;
 use App\Http\Middleware\AdminMiddleware;
 
+// Rota GET para logout (caso alguém acesse diretamente ou atualize a página)
+Route::get('/logout', function() {
+    return redirect()->route('login');
+})->name('logout.get');
+
 Route::middleware(['auth'])->group(function () {
     Route::get('/', [HomeController::class, 'index'])->name('home');
     Route::resource('song', SongController::class);
