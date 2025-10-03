@@ -148,6 +148,69 @@
 
 
     </script>
+    <!-- Script global para interceptar erros 419 -->
+    <script>
+    // Interceptador global para erros 419 (CSRF token expired)
+    (function() {
+        'use strict';
+
+        // Função para redirecionar diretamente para login
+        function redirectToLogin() {
+            window.location.href = '{{ route("login") }}';
+        }
+
+        // Interceptar fetch requests
+        const originalFetch = window.fetch;
+        window.fetch = function(...args) {
+            return originalFetch.apply(this, args)
+                .then(response => {
+                    if (response.status === 419) {
+                        redirectToLogin();
+                        throw new Error('Session expired');
+                    }
+                    return response;
+                })
+                .catch(error => {
+                    if (error.message === 'Session expired') {
+                        return;
+                    }
+                    throw error;
+                });
+        };
+
+        // Interceptar XMLHttpRequest
+        const originalXHRSend = XMLHttpRequest.prototype.send;
+        XMLHttpRequest.prototype.send = function(data) {
+            this.addEventListener('readystatechange', function() {
+                if (this.readyState === 4 && this.status === 419) {
+                    redirectToLogin();
+                }
+            });
+            return originalXHRSend.apply(this, arguments);
+        };
+
+        // Interceptar jQuery AJAX (se disponível)
+        if (typeof $ !== 'undefined') {
+            $(document).ajaxError(function(event, xhr, settings) {
+                if (xhr.status === 419) {
+                    redirectToLogin();
+                }
+            });
+        }
+
+        // Verificar formulários antes do envio
+        document.addEventListener('submit', function(e) {
+            const form = e.target;
+            if (form.tagName === 'FORM') {
+                const csrfToken = form.querySelector('input[name="_token"]');
+                if (!csrfToken || !csrfToken.value.trim()) {
+                    e.preventDefault();
+                    redirectToLogin();
+                }
+            }
+        });
+    })();
+    </script>
     @stack('scripts')
 </body>
 </html>
