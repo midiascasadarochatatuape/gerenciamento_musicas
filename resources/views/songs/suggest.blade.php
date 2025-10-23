@@ -94,7 +94,7 @@
                                                     @if($song->tempo)
                                                         <span class="badge bg-green w-50 d-flex align-items-center justify-content-center gap-1 py-03">
                                                             <img src="{{ asset('assets/img/metronomo.svg') }}" height="12" class="text-white" alt="">
-                                                            {{ $song->tempo }}
+                                                            {{ $song->tempo }} {{ $song->measure }}
                                                         </span>
                                                     @endif
                                                 </div>

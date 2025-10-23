@@ -182,7 +182,7 @@
                                     @if($song->measure)
                                         <span class="badge bg-green w-50 d-flex align-items-center justify-content-center gap-1 py-03">
                                             <img src="{{ asset('assets/img/metronomo.svg') }}" height="12" class="text-white" alt="">
-                                            {{ $song->measure }}
+                                            {{ $song->tempo }} {{ $song->measure }}
                                         </span>
                                     @endif
                                 </div>
@@ -431,7 +431,7 @@ document.addEventListener('DOMContentLoaded', function() {
                                     ${song.measure ? `
                                     <span class="badge bg-green w-50 d-flex align-items-center justify-content-center gap-1 py-03">
                                         <img src="{{ asset('assets/img/metronomo.svg') }}" height="12" class="text-white" alt="">
-                                        ${song.measure}
+                                        ${song.tempo} ${song.measure}
                                     </span>` : ''}
                                 </div>
                                 <div class="d-flex w-100 gap-1">
