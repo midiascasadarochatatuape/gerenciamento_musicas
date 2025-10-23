@@ -227,9 +227,11 @@
                         <div class="text-center py-4">
                             <i class="fas fa-book-open fa-2x text-muted mb-3"></i>
                             <p class="text-muted mb-3">Nenhum devocional publicado ainda.</p>
-                            <a href="{{ route('devocionais.create') }}" class="btn btn-primary btn-sm">
-                                <i class="fas fa-plus me-1"></i>Criar Devocional
-                            </a>
+                            @if (auth()->user()->type_user == 'admin')
+                                <a href="{{ route('devocionais.create') }}" class="btn btn-primary btn-sm">
+                                    <i class="fas fa-plus me-1"></i>Criar Devocional
+                                </a>
+                            @endif
                         </div>
                     @endforelse
                     </div>
