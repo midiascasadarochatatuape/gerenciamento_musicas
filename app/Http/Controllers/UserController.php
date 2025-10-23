@@ -134,4 +134,43 @@ class UserController extends Controller
         return redirect()->route('user.edit', $user)->with('success', 'Dados atualizados com sucesso!');
     }
 
+    public function destroy(User $user)
+    {
+        $this->authorize('delete', $user);
+
+        try {
+            // Verificar se o usuário não é o último admin
+            if ($user->type_user === 'admin') {
+                $adminCount = User::where('type_user', 'admin')->count();
+                if ($adminCount <= 1) {
+                    return redirect()->route('user.index')
+                        ->with('error', 'Não é possível excluir o último administrador do sistema.');
+                }
+            }
+
+            // Verificar se o usuário não está tentando excluir a si mesmo
+            if ($user->id === auth()->id()) {
+                return redirect()->route('user.index')
+                    ->with('error', 'Você não pode excluir sua própria conta.');
+            }
+
+            // Remover relacionamentos com grupos
+            DB::table('group_user')->where('user_id', $user->id)->delete();
+
+            // Atualizar músicas criadas por este usuário (manter as músicas mas remover a referência)
+            DB::table('songs')->where('id_user', $user->id)->update(['id_user' => null]);
+
+            // Excluir o usuário
+            $user->delete();
+
+            return redirect()->route('user.index')
+                ->with('success', 'Usuário excluído com sucesso.');
+
+        } catch (\Exception $e) {
+            \Log::error('Erro ao excluir usuário: ' . $e->getMessage());
+            return redirect()->route('user.index')
+                ->with('error', 'Erro ao excluir usuário: ' . $e->getMessage());
+        }
+    }
+
 }

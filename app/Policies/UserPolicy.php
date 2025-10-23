@@ -18,4 +18,10 @@ class UserPolicy
     {
         return $authUser->id === $user->id;;
     }
+
+    public function delete(User $authUser, User $user)
+    {
+        // Apenas admins podem excluir usuários
+        return $authUser->type_user === 'admin';
+    }
 }
