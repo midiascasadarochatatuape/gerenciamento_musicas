@@ -233,11 +233,20 @@
                             </div>
                             <div class="col-md-3 col-4 d-flex">
                                 @if($song->link_youtube)
-                                <a class="p-0 m-0 w-100 d-flex justify-content-center align-items-center" href="#" data-bs-toggle="modal" data-bs-target="#youtubeModal" data-youtube-url="{{ $song->link_youtube }}">
-                                    <span class="material-symbols-outlined play symbol-filled text-danger cursor-pointer mt-1">
-                                        play_circle
-                                    </span>
-                                </a>
+                                    <a class="p-0 m-0 w-100 d-flex justify-content-center align-items-center" href="#" data-bs-toggle="modal" data-bs-target="#youtubeModal" data-youtube-url="{{ $song->link_youtube }}">
+                                        <span class="material-symbols-outlined play symbol-filled text-danger cursor-pointer mt-1">
+                                            play_circle
+                                        </span>
+                                    </a>
+                                    @else
+                                        @if ($song->link_spotify)
+                                            <a href="{{ $song->link_spotify }}" target="_blank" class="p-0 m-0 w-100 d-flex justify-content-center align-items-center">
+                                                <span class="material-symbols-outlined play symbol-filled text-green cursor-pointer mt-1">
+                                                    play_circle
+                                                </span>
+                                            </a>
+
+                                        @endif
                                 @endif
                             </div>
                         </div>
