@@ -12,25 +12,19 @@
                     <button type="button" class="btn btn-sm px-3 rounded-pill btn-primary dropdown-toggle" data-bs-toggle="dropdown">
                         Status: {{ $song->status == 1 ? 'Sugerida' :
                                   ($song->status == 2 ? 'Em Análise' :
-                                  ($song->status == 3 ? 'Rejeitada' :
-                                  ($song->status == 4 ? 'Excluída' :
                                   ($song->status == 5 ? 'Stand By' :
-                                  ($song->status == 6 ? 'Temática' :
-                                  ($song->status == 7 ? 'Aprovada' : 'Publicada')))))) }}
+                                  ($song->status == 3 ? 'Reprovada' :
+                                  ($song->status == 7 ? 'Aprovada' : 'Publicada')))) }}
                     </button>
                     <ul class="dropdown-menu">
                         <li><a class="dropdown-item {{ $song->status == 1 ? 'active' : '' }}" href="#"
                             onclick="event.preventDefault(); document.getElementById('status-1').submit();">Sugerida</a></li>
                         <li><a class="dropdown-item {{ $song->status == 2 ? 'active' : '' }}" href="#"
                             onclick="event.preventDefault(); document.getElementById('status-2').submit();">Em Análise</a></li>
-                        <li><a class="dropdown-item {{ $song->status == 3 ? 'active' : '' }}" href="#"
-                            onclick="event.preventDefault(); document.getElementById('status-3').submit();">Rejeitada</a></li>
-                        <li><a class="dropdown-item {{ $song->status == 4 ? 'active' : '' }}" href="#"
-                            onclick="event.preventDefault(); document.getElementById('status-4').submit();">Excluída</a></li>
                         <li><a class="dropdown-item {{ $song->status == 5 ? 'active' : '' }}" href="#"
                             onclick="event.preventDefault(); document.getElementById('status-5').submit();">Stand By</a></li>
-                        <li><a class="dropdown-item {{ $song->status == 6 ? 'active' : '' }}" href="#"
-                            onclick="event.preventDefault(); document.getElementById('status-6').submit();">Temática</a></li>
+                        <li><a class="dropdown-item {{ $song->status == 3 ? 'active' : '' }}" href="#"
+                            onclick="event.preventDefault(); document.getElementById('status-3').submit();">Reprovada</a></li>
                         <li><a class="dropdown-item {{ $song->status == 7 ? 'active' : '' }}" href="#"
                             onclick="event.preventDefault(); document.getElementById('status-7').submit();">Aprovada</a></li>
                     </ul>

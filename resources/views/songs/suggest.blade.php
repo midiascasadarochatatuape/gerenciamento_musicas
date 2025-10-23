@@ -34,13 +34,7 @@
                         <li class="nav-item">
                             <a class="nav-link link-primary {{ request('status') == 3 ? 'active' : '' }}"
                                href="{{ route('songs.suggest', ['status' => 3]) }}">
-                               Rejeitadas
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link link-primary {{ request('status') == 4 ? 'active' : '' }}"
-                               href="{{ route('songs.suggest', ['status' => 4]) }}">
-                               Excluídas
+                               Reprovadas
                             </a>
                         </li>
                         @endif
@@ -48,12 +42,6 @@
                             <a class="nav-link link-primary {{ request('status') == 5 ? 'active' : '' }}"
                                href="{{ route('songs.suggest', ['status' => 5]) }}">
                                Stand By
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link link-primary {{ request('status') == 6 ? 'active' : '' }}"
-                               href="{{ route('songs.suggest', ['status' => 6]) }}">
-                               Temática
                             </a>
                         </li>
                     </ul>
