@@ -500,7 +500,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     <div class="d-flex flex-column mb-2">
                         <div class="d-flex justify-content-between border-bottom mb-3 pb-3 gap-2">
                             <div class="d-flex flex-column justify-content-center">
-                                <a href='{{ route('songs.show', $song) }}' class="card-title m-0 link-primary h5">${song.title}</a>
+                                <a href="/songs/${song.id}" class="card-title m-0 link-primary h5">${song.title}</a>
                                 ${song.version ? `<p class="card-subtitle mt-2 text-muted lh-sm small"><strong>${song.version}</strong></p>` : ''}
                             </div>
                             <div class="d-flex justify-content-center align-items-start">
