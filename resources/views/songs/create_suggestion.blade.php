@@ -59,7 +59,7 @@
                     <div class="col-12">
                         <div class="form-group">
                             <label class="form-label" for="lyrics">Letra da Música</label>
-                            <textarea class="form-control @error('lyrics') is-invalid @enderror"
+                            <textarea required class="form-control @error('lyrics') is-invalid @enderror"
                                       id="lyrics" name="lyrics" rows="9">{{ old('lyrics') }}</textarea>
                             @error('lyrics')
                                 <div class="invalid-feedback">{{ $message }}</div>

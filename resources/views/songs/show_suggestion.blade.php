@@ -67,7 +67,7 @@
                 <div class="card-body">
                     <div class="mb-3">
                         @if($song->version)
-                            <h5>Version: {{ $song->version }}</h5>
+                            <h5>Versão: {{ $song->version }}</h5>
                         @endif
                         <div class="d-flex gap-2 mb-2">
                             @if($song->tone)
