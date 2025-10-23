@@ -173,9 +173,16 @@
                         </div>
 
                         <!-- Botões -->
-                        <div class="d-flex justify-content-center gap-4 my-4">
+                        <div class="d-flex justify-content-center gap-3 my-4">
                             <a href="{{ route('songs.index') }}" class="btn btn-danger px-4 rounded-pill">Cancelar</a>
-                            <button onclick="beforeSubmit()" type="button" class="btn btn-success text-white px-4 rounded-pill">Salvar Música</button>
+                            <button onclick="beforeSubmit('save')" type="button" class="btn btn-success text-white px-4 rounded-pill">
+                                <span class="material-symbols-outlined me-1" style="font-size: 16px;">save</span>
+                                Salvar Música
+                            </button>
+                            <button onclick="beforeSubmit('save-and-new')" type="button" class="btn btn-primary text-white px-4 rounded-pill">
+                                <span class="material-symbols-outlined me-1" style="font-size: 16px;">save_as</span>
+                                Salvar e Criar Nova
+                            </button>
                         </div>
                     </form>
                 </div>
@@ -280,7 +287,7 @@
         }
     });
 
-    function beforeSubmit() {
+    function beforeSubmit(action = 'save') {
 
         let content = tinymce.get('tiny').getContent();
         var tempDiv = document.createElement('div');
@@ -302,7 +309,14 @@
         });
 
         document.getElementById('htmlInput').value = tempDiv.innerHTML;
-        //console.log(cifra);
+
+        // Definir a ação do formulário baseada no botão clicado
+        if (action === 'save-and-new') {
+            form.action = '{{ route("songs.store-and-new") }}';
+        } else {
+            form.action = '{{ route("songs.store") }}';
+        }
+
         form.submit();
     }
 

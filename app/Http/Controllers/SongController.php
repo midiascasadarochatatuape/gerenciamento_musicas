@@ -333,6 +333,61 @@ class SongController extends Controller
         }
     }
 
+    public function storeAndNew(Request $request)
+    {
+        $this->authorize('create', Song::class);
+
+        if (!auth()->check()) {
+            return redirect()->route('login')
+                ->with('error', 'Você precisa estar autenticado para criar uma música.');
+        }
+
+        $validatedData = $request->validate([
+            'title' => 'required|string|max:255',
+            'version' => 'nullable|string|max:255',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
+            'snippet' => 'nullable|string',
+            'tone' => 'nullable|string|max:255',
+            'tempo' => 'nullable|string|max:255',
+            'measure' => 'nullable|string|max:255',
+            'type' => 'nullable|in:hino,corinho,cantico,atual',
+            'intensity' => 'nullable|in:lenta,media,rapida',
+            'bible_reference' => 'nullable|string',
+            'link_youtube' => 'nullable|url|max:255',
+            'link_spotify' => 'nullable|url|max:255',
+            'link_drive' => 'nullable|url|max:255',
+            'lyrics' => 'nullable|string',
+            'chords' => 'nullable|string',
+            'status' => 'required|integer|between:1,7'
+        ]);
+
+        try {
+            // Garantir que o id_user seja definido antes de criar o registro
+            $validatedData['id_user'] = auth()->id();
+            $validatedData['times'] = 0;
+
+            if ($request->hasFile('image')) {
+                $image = $request->file('image');
+                $imageName = time() . '.' . $image->getClientOriginalExtension();
+                $image->move(public_path('storage/image'), $imageName);
+                $validatedData['image'] = '/storage/image/' . $imageName;
+            }
+
+            // Criar a música com todos os dados necessários
+            $song = Song::create($validatedData);
+
+            if ($request->has('categories')) {
+                $song->categories()->sync($request->categories);
+            }
+
+            return redirect()->route('songs.create')
+                ->with('success', 'Música "' . $song->title . '" criada com sucesso! Você pode adicionar uma nova música agora.');
+        } catch (\Exception $e) {
+            \Log::error('Erro ao criar música: ' . $e->getMessage());
+            return back()->withInput()
+                ->with('error', 'Erro ao criar música: ' . $e->getMessage());
+        }
+    }
 
     public function destroy(Song $song)
     {
