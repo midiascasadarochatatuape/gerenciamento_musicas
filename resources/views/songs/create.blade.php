@@ -51,6 +51,28 @@
                                 </div>
                             </div>
 
+                            <div class="col-12 mb-3">
+                                <label class="form-label">Categorias</label>
+                                <div class="card">
+                                    <div class="card-body">
+                                        <div class="d-flex flex-wrap gap-4">
+                                            @foreach($categories->where('type', 'category') as $category)
+                                                <div class="form-check">
+                                                    <input type="checkbox" class="form-check-input" name="categories[]" value="{{ $category->id }}" id="category_{{ $category->id }}">
+                                                    <label class="form-check-label" for="category_{{ $category->id }}">
+                                                        {{ $category->name }}
+                                                    </label>
+                                                </div>
+                                            @endforeach
+                                        </div>
+                                        <button type="button" class="btn btn-primary btn-sm px-4 rounded-pill mt-4 d-inline-block" data-bs-toggle="modal" data-bs-target="#categoriesModal">
+                                            Gerenciar Categorias
+                                        </button>
+                                    </div>
+                                </div>
+
+                            </div>
+
 
                             <div class="col-md-1 col-4">
                                 <div class="form-group mb-3">
@@ -140,27 +162,7 @@
 
                         <!-- Categorias e Contexto -->
                         <div class="row mb-5">
-                            <div class="col-12 mb-3">
-                                <label class="form-label">Categorias</label>
-                                <div class="card">
-                                    <div class="card-body">
-                                        <div class="d-flex flex-wrap gap-4">
-                                            @foreach($categories->where('type', 'category') as $category)
-                                                <div class="form-check">
-                                                    <input type="checkbox" class="form-check-input" name="categories[]" value="{{ $category->id }}" id="category_{{ $category->id }}">
-                                                    <label class="form-check-label" for="category_{{ $category->id }}">
-                                                        {{ $category->name }}
-                                                    </label>
-                                                </div>
-                                            @endforeach
-                                        </div>
-                                        <button type="button" class="btn btn-primary btn-sm px-4 rounded-pill mt-4 d-inline-block" data-bs-toggle="modal" data-bs-target="#categoriesModal">
-                                            Gerenciar Categorias
-                                        </button>
-                                    </div>
-                                </div>
 
-                            </div>
                             <div class="col-md-2">
                                 <div class="form-group mb-3">
                                     <label class="form-label" for="status">Status</label>
