@@ -9,7 +9,7 @@
                 <h2 class="text-primary">{{ __('Visão Geral') }}</h2>
                 <div class="text-primary fw-semibold">
                     <i class="fas fa-clock me-1"></i>
-                    {{ now()->format('d/m/Y - H:i') }}
+                    {{ now()->setTimezone('America/Sao_Paulo')->format('d/m/Y - H:i') }}
                 </div>
             </div>
         </div>
@@ -143,11 +143,18 @@
                 </div>
                 <div class="card-body py-0 px-4">
                     @forelse($topSongs as $song)
-                        <div class="d-flex my-2 py-2 justify-content-between align-items-center {{
+                        <div class="d-flex my-2 py-2 gap-2 justify-content-between align-items-center {{
                             $loop->count % 2 == 0
                                 ? ($loop->remaining > 1 ? 'border-bottom' : '')
                                 : (!$loop->last ? 'border-bottom' : '')
                         }}">
+                            <div class="d-flex justify-content-center align-items-start">
+                                @if($song->image)
+                                    <img src="{{ $song->image }}" class="foto-perfil" alt="">
+                                @else
+                                    <img src="{{ asset('assets/img/default-profile.webp') }}" class="foto-perfil" alt="">
+                                @endif
+                            </div>
                             <a class="flex-grow-1 me-2 py-1" href="{{ route('songs.show', $song) }}">
                                 <h5 class="mb-0 text-truncate">{{ $song->title }}</h5>
                                 <p class="text-muted mb-0">{{ $song->version ?? 'Versão original' }}</p>
