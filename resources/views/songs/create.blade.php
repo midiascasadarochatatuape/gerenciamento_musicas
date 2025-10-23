@@ -3,8 +3,12 @@
 @section('content')
 <div class="container">
     <div class="row mb-4">
-        <div class="col">
-            <h2>Nova Música</h2>
+        <div class="col d-flex justify-content-between align-items-center mb-4">
+            <h2 class="m-0">Nova Música</h2>
+            <button onclick="beforeSubmit('save-and-new')" type="button" class="btn btn-primary text-white px-4 rounded-pill">
+                <span class="material-symbols-outlined me-1" style="font-size: 16px;">save_as</span>
+                Salvar e Criar Nova
+            </button>
         </div>
     </div>
 
@@ -179,10 +183,7 @@
                                 <span class="material-symbols-outlined me-1" style="font-size: 16px;">save</span>
                                 Salvar Música
                             </button>
-                            <button onclick="beforeSubmit('save-and-new')" type="button" class="btn btn-primary text-white px-4 rounded-pill">
-                                <span class="material-symbols-outlined me-1" style="font-size: 16px;">save_as</span>
-                                Salvar e Criar Nova
-                            </button>
+
                         </div>
                     </form>
                 </div>
