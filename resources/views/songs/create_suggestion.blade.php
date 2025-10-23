@@ -3,7 +3,7 @@
 @section('content')
 <div class="container">
     <div class="row mb-4">
-        <div class="col">
+        <div class="col d-flex justify-content-between align-items-center">
             <h2>Sugerir Nova Música</h2>
         </div>
     </div>
@@ -58,8 +58,8 @@
 
                     <div class="col-12">
                         <div class="form-group">
-                            <label class="form-label" for="lyrics">Letra da Música *</label>
-                            <textarea required class="form-control @error('lyrics') is-invalid @enderror"
+                            <label class="form-label" for="lyrics">Letra da Música</label>
+                            <textarea class="form-control @error('lyrics') is-invalid @enderror"
                                       id="lyrics" name="lyrics" rows="9">{{ old('lyrics') }}</textarea>
                             @error('lyrics')
                                 <div class="invalid-feedback">{{ $message }}</div>
@@ -71,10 +71,18 @@
 
                 <div class="d-flex flex-lg-row flex-column-reverse justify-content-center gap-4">
                     <a href="{{ route('songs.suggest') }}" class="btn px-4 rounded-pill btn-danger">Cancelar</a>
-                    <button type="submit" class="btn px-4 rounded-pill btn-primary">Enviar Sugestão</button>
+                    <button type="submit" formaction="{{ route('songs.store') }}" class="btn px-4 rounded-pill btn-primary d-flex align-items-center">
+                        <span class="material-symbols-outlined me-1" style="font-size: 16px;">send</span>
+                        Enviar Sugestão
+                    </button>
+                    <button type="submit" formaction="{{ route('songs.store-suggestion-and-new') }}" class="btn px-4 rounded-pill btn-success d-flex align-items-center">
+                        <span class="material-symbols-outlined me-1" style="font-size: 16px;">add_circle</span>
+                        Salvar e Criar Nova
+                    </button>
                 </div>
             </form>
         </div>
     </div>
 </div>
+
 @endsection

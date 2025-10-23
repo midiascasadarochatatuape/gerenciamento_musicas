@@ -42,6 +42,7 @@ Route::get('/api/songs/simple-search', [SongController::class, 'search'])->name(
 Route::middleware(['auth'])->group(function () {
     Route::resource('group', GroupController::class);
     Route::get('/songs/create/suggestion', [SongController::class, 'createSuggestion'])->name('songs.create.suggestion');
+    Route::post('/songs/store-suggestion-and-new', [SongController::class, 'storeSuggestionAndNew'])->name('songs.store-suggestion-and-new');
 });
 Route::middleware(['auth'])->group(function () {
     Route::resource('schedule', ScheduleController::class);

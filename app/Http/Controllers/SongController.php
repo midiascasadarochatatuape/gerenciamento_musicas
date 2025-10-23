@@ -324,6 +324,12 @@ class SongController extends Controller
                 $song->categories()->sync($request->categories);
             }
 
+            // Se for uma sugestão (status = 1), redirecionar para a página de sugestões
+            if ($validatedData['status'] == 1) {
+                return redirect()->route('songs.suggest')
+                    ->with('success', 'Sugestão "' . $song->title . '" enviada com sucesso!');
+            }
+
             return redirect()->route('songs.show', $song)
                 ->with('success', 'Música criada com sucesso!');
         } catch (\Exception $e) {
@@ -386,6 +392,41 @@ class SongController extends Controller
             \Log::error('Erro ao criar música: ' . $e->getMessage());
             return back()->withInput()
                 ->with('error', 'Erro ao criar música: ' . $e->getMessage());
+        }
+    }
+
+    public function storeSuggestionAndNew(Request $request)
+    {
+        $this->authorize('create', Song::class);
+
+        if (!auth()->check()) {
+            return redirect()->route('login')
+                ->with('error', 'Você precisa estar autenticado para criar uma sugestão.');
+        }
+
+        $validatedData = $request->validate([
+            'title' => 'required|string|max:255',
+            'version' => 'nullable|string|max:255',
+            'link_youtube' => 'nullable|url|max:255',
+            'link_spotify' => 'nullable|url|max:255',
+            'lyrics' => 'nullable|string',
+        ]);
+
+        try {
+            // Garantir que seja sempre uma sugestão (status = 1)
+            $validatedData['id_user'] = auth()->id();
+            $validatedData['status'] = 1;
+            $validatedData['times'] = 0;
+
+            // Criar a sugestão com todos os dados necessários
+            $song = Song::create($validatedData);
+
+            return redirect()->route('songs.create.suggestion')
+                ->with('success', 'Sugestão "' . $song->title . '" enviada com sucesso! Você pode adicionar uma nova sugestão agora.');
+        } catch (\Exception $e) {
+            \Log::error('Erro ao criar sugestão: ' . $e->getMessage());
+            return back()->withInput()
+                ->with('error', 'Erro ao enviar sugestão: ' . $e->getMessage());
         }
     }
 
