@@ -375,7 +375,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 <h5 class="modal-title" id="youtubeModalLabel"></h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
             </div>
-            <div class="modal-body">
+            <div class="modal-body p-0">
                 <div class="ratio ratio-16x9">
                     <iframe id="youtubeIframe" src="" allowfullscreen></iframe>
                 </div>
