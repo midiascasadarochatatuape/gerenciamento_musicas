@@ -2,10 +2,10 @@
 
 @section('content')
 <div class="container">
-    <div class="row mb-4 justify-content-end">
+    <div class="mb-4 justify-content-end d-flex gap-md-3 gap-1">
         @auth
             @if(auth()->user()->type_user == 'admin' || auth()->user()->type_user == 'tecnico')
-            <div class="col-auto">
+            <div>
                 <a href="{{ route('songs.edit', $song) }}" class="btn btn-sm px-4 rounded-pill btn-primary d-flex align-items-center justify-content-center gap-2">
                     <span class="material-symbols-outlined text-white m-0" style="font-size: 1rem">settings</span>
                     <span>Editar musica</span>
@@ -13,6 +13,11 @@
             </div>
             @endif
         @endauth
+        <div>
+            <a href="{{ route('songs.index') }}" class="btn btn-sm px-4 rounded-pill btn-primary d-flex align-items-center justify-content-center gap-2">
+                <span>&laquo; Voltar</span>
+            </a>
+        </div>
     </div>
 
 
