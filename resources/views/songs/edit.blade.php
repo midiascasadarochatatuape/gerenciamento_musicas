@@ -205,18 +205,45 @@
 <script>
     tinymce.init({
         selector: 'textarea#tiny',
-        forced_root_block: 'pre', // 👈 muda o bloco padrão de <p> para <pre>
-        force_br_newlines: true,
-        force_p_newlines: false,
-        content_style:
-            `pre {
-                white-space: pre-wrap;
-                font-family: monospace;
-                font-size: 16px;
-            }`
+        menubar: true   ,
+        toolbar: 'bold italic underline | code',
+        forced_root_block: false, // evita que o TinyMCE coloque <p>
+
+        setup: (editor) => {
+            // Intercepta eventos de colagem para limpar apenas fonte e tamanho
+            editor.on('PastePreProcess', (e) => {
+                // Remove apenas formatação de fonte, mantendo estrutura e outras formatações
+                e.content = e.content.replace(/font-family:[^;]*;?/gi, '');
+                e.content = e.content.replace(/font-size:[^;]*;?/gi, '');
+                e.content = e.content.replace(/<font[^>]*>/gi, '');
+                e.content = e.content.replace(/<\/font>/gi, '');
+            });
+        },
+
+        content_style: `
+            body {
+                font-family: monospace !important;
+                font-size: 16px !important;
+                line-height: 1.4;
+            }
+            * {
+                font-family: monospace !important;
+                font-size: 16px !important;
+            }
+            p, div, span, strong, em, b, i, u {
+                font-family: monospace !important;
+                font-size: 16px
+            }
+            pre {
+                white-space: pre-wrap !important;
+                font-family: monospace !important;
+                font-size: 16px
+                padding: 8px;
+                border-radius: 6px;
+                margin: 0;
+            }
+        `
     });
-
-
     document.getElementById('alt-perfil').addEventListener('click', function() {
         let im = document.getElementById('image');
         document.getElementById('image-perfil').classList.toggle('d-none');
