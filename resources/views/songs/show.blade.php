@@ -279,7 +279,7 @@
                 </form>
 
             </div>
-            <div class="modal-footer d-flex justify-content-md-center justify-content-start bg-primary px-2">
+            <div class="modal-footer d-flex justify-content-center bg-primary px-2">
                 <div class="d-flex gap-md-4
                     @auth
                         @if(auth()->user()->type_user == 'admin' || auth()->user()->type_user == 'tecnico')
