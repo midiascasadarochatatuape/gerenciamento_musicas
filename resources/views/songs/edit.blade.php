@@ -204,7 +204,16 @@
 
 <script>
     tinymce.init({
-        selector: 'textarea#tiny'
+        selector: 'textarea#tiny',
+        forced_root_block: 'pre', // 👈 muda o bloco padrão de <p> para <pre>
+        force_br_newlines: true,
+        force_p_newlines: false,
+        content_style:
+            `pre {
+                white-space: pre-wrap;
+                font-family: monospace;
+                font-size: 16px;
+            }`
     });
 
 

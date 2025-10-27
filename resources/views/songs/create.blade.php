@@ -262,7 +262,16 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/tinymce/7.9.1/tinymce.min.js" integrity="sha512-09JpfVm/UE1F4k8kcVUooRJAxVMSfw/NIslGlWE/FGXb2uRO1Nt4BXAJ3LxPqNbO3Hccdu46qaBPp9wVpWAVhA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 <script>
     tinymce.init({
-        selector: 'textarea#tiny'
+        selector: 'textarea#tiny',
+        forced_root_block: 'pre', // 👈 muda o bloco padrão de <p> para <pre>
+        force_br_newlines: true,
+        force_p_newlines: false,
+        content_style:
+            `pre {
+                white-space: pre-wrap;
+                font-family: monospace;
+                font-size: 16px;
+            }`
     });
 
     document.addEventListener('DOMContentLoaded', function() {
