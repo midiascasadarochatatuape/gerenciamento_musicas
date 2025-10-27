@@ -439,12 +439,12 @@
             }
             p, div, span, strong, em, b, i, u {
                 font-family: monospace !important;
-                font-size: 16px
+                font-size: 12pt
             }
             pre {
                 white-space: pre-wrap !important;
                 font-family: monospace !important;
-                font-size: 16px
+                font-size: 12pt
                 padding: 8px;
                 border-radius: 6px;
                 margin: 0;
