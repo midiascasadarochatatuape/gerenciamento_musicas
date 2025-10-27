@@ -411,7 +411,45 @@
 <script>
 
     tinymce.init({
-        selector: 'textarea#tiny'
+        selector: 'textarea#tiny',
+                menubar: true   ,
+        toolbar: 'bold italic underline | code',
+        forced_root_block: false, // evita que o TinyMCE coloque <p>
+
+        setup: (editor) => {
+            // Intercepta eventos de colagem para limpar apenas fonte e tamanho
+            editor.on('PastePreProcess', (e) => {
+                // Remove apenas formatação de fonte, mantendo estrutura e outras formatações
+                e.content = e.content.replace(/font-family:[^;]*;?/gi, '');
+                e.content = e.content.replace(/font-size:[^;]*;?/gi, '');
+                e.content = e.content.replace(/<font[^>]*>/gi, '');
+                e.content = e.content.replace(/<\/font>/gi, '');
+            });
+        },
+
+        content_style: `
+            body {
+                font-family: monospace !important;
+                font-size: 16px !important;
+                line-height: 1.4;
+            }
+            * {
+                font-family: monospace !important;
+                font-size: 16px !important;
+            }
+            p, div, span, strong, em, b, i, u {
+                font-family: monospace !important;
+                font-size: 16px
+            }
+            pre {
+                white-space: pre-wrap !important;
+                font-family: monospace !important;
+                font-size: 16px
+                padding: 8px;
+                border-radius: 6px;
+                margin: 0;
+            }
+        `
     });
 
     const notesSharp = ['C', 'C#', 'D', 'Eb', 'E', 'F', 'F#', 'G', 'G#', 'A', 'Bb', 'B'];
