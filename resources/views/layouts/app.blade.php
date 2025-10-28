@@ -100,7 +100,9 @@
 
                     </div>
                     <div class="d-md-none d-block w-100 text-center py-3 mt-3">
-                        <a class="btn btn-secondary d-block w-100 text-white" href="{{ route('logout') }}">{{ __('Desconectar') }}</a>
+                        <a class="btn btn-secondary d-block w-100 text-white" href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                            {{ __('Desconectar') }}
+                        </a>
                     </div>
                 </div>
             </div>
