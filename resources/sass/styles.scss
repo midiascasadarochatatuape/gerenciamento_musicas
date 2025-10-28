@@ -523,6 +523,10 @@ input[type="radio"] {
     height: 50px;
     object-fit: cover;      /* garante que a imagem preencha sem distorcer */
     border-radius: 50%;     /* deixa redonda */
+    @media screen and (max-width:768px) {
+        width: 40px;           /* ou o tamanho desejado */
+        height: 40px;
+    }
   }
 
   .foto-perfil-show {
