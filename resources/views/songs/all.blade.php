@@ -148,7 +148,7 @@
     </div>
 
     <!-- Container das músicas -->
-    <div id="songsContainer" class="row row-cols-lg-4 row-cols-md-3 row-cols-2 g-2 position-relative z-0">
+    <div id="songsContainer" class="row row-cols-lg-5 row-cols-md-3 row-cols-2 g-2 position-relative z-0">
         @foreach($songs as $song)
         <div class="col mb-4 song-card">
             <div class="card h-100">
