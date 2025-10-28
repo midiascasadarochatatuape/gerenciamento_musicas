@@ -83,7 +83,7 @@ class SongController extends Controller
                 break;
         }
 
-        $songs = $query->where('status', 7)->paginate(8);
+        $songs = $query->where('status', 7)->paginate(10);
 
         // Manter os parâmetros da URL na paginação
         $songs->appends($request->query());
@@ -169,7 +169,7 @@ class SongController extends Controller
                 break;
         }
 
-        $songs = $query->where('status', 7)->paginate(8);
+        $songs = $query->where('status', 7)->paginate(10);
         $categories = Category::all();
 
         // Se for uma requisição AJAX, retornar JSON para scroll infinito
@@ -470,7 +470,7 @@ class SongController extends Controller
     public function allSongs(Request $request)
     {
         $page = $request->get('page', 1);
-        $perPage = 8;
+        $perPage = 10;
         $offset = ($page - 1) * $perPage;
 
         $query = Song::where('status', 7);
@@ -556,7 +556,7 @@ class SongController extends Controller
     public function searchSongs(Request $request)
     {
         $page = $request->get('page', 1);
-        $perPage = 8;
+        $perPage = 10;
         $offset = ($page - 1) * $perPage;
 
         $query = Song::where('status', 7);
