@@ -208,7 +208,7 @@ class SongController extends Controller
 
         //dd($request);
 
-        $validated = $request->validate([
+        $validatedData = $request->validate([
             'title' => 'required|string|max:255',
             'version' => 'nullable|string|max:255',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
@@ -454,7 +454,7 @@ class SongController extends Controller
         $songs = Song::with('user:id,name')
             ->where(function($query) use ($search) {
                 $query->where('title', 'like', '%' . $search . '%')
-                      ->orWhere('biblical_reference', 'like', '%' . $search . '%')
+                      ->orWhere('bible_reference', 'like', '%' . $search . '%')
                       ->orWhere('version', 'like', '%' . $search . '%')
                       ->orWhereHas('user', function($q) use ($search) {
                           $q->where('name', 'like', '%' . $search . '%');
@@ -462,7 +462,7 @@ class SongController extends Controller
             })
             ->where('status', 7) // Apenas músicas aprovadas
             ->limit(15)
-            ->get(['id', 'title', 'version', 'tone', 'biblical_reference', 'id_user']);
+            ->get(['id', 'title', 'version', 'tone', 'bible_reference', 'id_user']);
 
         return response()->json($songs);
     }
@@ -560,6 +560,16 @@ class SongController extends Controller
         $offset = ($page - 1) * $perPage;
 
         $query = Song::where('status', 7);
+
+        // Busca por texto (título, versão, referência bíblica)
+        if ($request->filled('search')) {
+            $searchTerm = $request->search;
+            $query->where(function($q) use ($searchTerm) {
+                $q->where('title', 'like', '%' . $searchTerm . '%')
+                  ->orWhere('version', 'like', '%' . $searchTerm . '%')
+                  ->orWhere('bible_reference', 'like', '%' . $searchTerm . '%');
+            });
+        }
 
         // Aplicar filtros se fornecidos
         if ($request->filled('letter')) {

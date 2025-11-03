@@ -342,7 +342,7 @@ document.addEventListener('DOMContentLoaded', function() {
                                     <h6 class="mb-0">${song.title}</h6>
                                     ${song.version ? `<small class="text-muted">${song.version}</small>` : ''}
                                 </div>
-                                ${song.biblical_reference ? `<small class="badge bg-secondary">${song.biblical_reference}</small>` : ''}
+                                ${song.bible_reference ? `<small class="badge bg-secondary">${song.bible_reference}</small>` : ''}
                             </div>
                         </a>
                     `;
