@@ -8,7 +8,6 @@
         </div>
     </div>
 
-
         <div class="row">
              @forelse($nextSchedules as $schedule)
             <div class="col-md-4">

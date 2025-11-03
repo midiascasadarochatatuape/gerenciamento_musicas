@@ -9,6 +9,7 @@
         </div>
     </div>
 
+
     <div class="card">
         <div class="card-body">
             <form action="{{ route('schedule.store') }}" method="POST">
@@ -189,12 +190,12 @@ document.addEventListener('DOMContentLoaded', function() {
     document.querySelector('form').addEventListener('submit', function(e) {
         // Obter todos os selects na ordem atual após possível reordenamento
         const selects = Array.from(document.querySelectorAll('select[name="songs[]"]'));
-        
+
         // Remover os selects do formulário (vamos readicioná-los na ordem correta)
         selects.forEach(select => {
             select.name = '';
         });
-        
+
         // Readicionar os selects na ordem correta
         selects.forEach((select, index) => {
             select.name = `songs[${index}]`;
@@ -206,7 +207,7 @@ document.addEventListener('DOMContentLoaded', function() {
         if (sortable) {
             sortable.destroy();
         }
-        
+
         sortable = new Sortable(songsContainer, {
             animation: 150,
             handle: '.handle',
@@ -231,7 +232,7 @@ document.addEventListener('DOMContentLoaded', function() {
             e.target.closest('.song-item').remove();
             // Atualizar os selects após remover um
             updateSongSelects();
-            
+
             // Atualizar o Sortable após remover uma música
             initSortable();
         }
