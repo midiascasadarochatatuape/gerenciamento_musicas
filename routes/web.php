@@ -61,7 +61,22 @@ Route::middleware(['auth'])->group(function () {
 });
 Route::post('/songs/{song}/update-lyrics', [SongController::class, 'updateLyrics'])->name('songs.update-lyrics');
 Route::post('/songs/{song}/update-chords', [SongController::class, 'updateChords'])->name('songs.update-chords');
+// Adicionar rotas que não precisam de autenticação aqui
 Route::get('/schedule/{schedule}/setlist', [ScheduleController::class, 'setlist'])->name('schedule.setlist');
+
+// Documentação da API
+Route::get('/api-docs', function () {
+    return view('api-docs');
+})->name('api.docs');
+
+// Teste da API
+Route::get('/test-api', function () {
+    return response()->json([
+        'success' => true,
+        'message' => 'API funcionando via web.php',
+        'timestamp' => now()
+    ]);
+});
 Route::get('/api/songs/{song}/lyrics', [SongController::class, 'getLyrics']);
 Route::get('/api/songs/{song}/chords', [SongController::class, 'getChords']);
 
