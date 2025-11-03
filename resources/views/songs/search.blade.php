@@ -340,15 +340,15 @@ document.addEventListener('DOMContentLoaded', function() {
 
                 data.forEach(song => {
                     const div = document.createElement('div');
-                    div.className = 'p-3 border-bottom search-item';
+                    div.className = 'px-1 py-3 border-bottom search-item';
                     div.innerHTML = `
                         <a href="/songs/${song.id}" class="text-decoration-none">
                             <div class="d-flex justify-content-between align-items-center">
-                                <div>
+                                <div class="d-flex flex-column justify-content-center w-33">
                                     <h6 class="mb-0">${song.title}</h6>
                                     ${song.version ? `<small class="text-muted">${song.version}</small>` : ''}
                                 </div>
-                                ${song.bible_reference ? `<small class="badge bg-secondary">${song.bible_reference}</small>` : ''}
+                                ${song.bible_reference ? `<small class="badge bg-secondary d-flex w-50">${song.bible_reference}</small>` : ''}
                             </div>
                         </a>
                     `;
