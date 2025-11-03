@@ -227,8 +227,6 @@ class SongController extends Controller
             'status' => 'required|integer|between:1,7',
         ]);
 
-        //dd($validated);
-
         try {
             if ($request->hasFile('image')) {
                 if ($song->image && file_exists(public_path($song->image))) {
@@ -237,10 +235,10 @@ class SongController extends Controller
                 $image = $request->file('image');
                 $imageName = time() . '.' . $image->getClientOriginalExtension();
                 $image->move(public_path('storage/image'), $imageName);
-                $validated['image'] = '/storage/image/' . $imageName;
+                $validatedData['image'] = '/storage/image/' . $imageName;
             }
 
-            $song->update($validated);
+            $song->update($validatedData);
             $song->categories()->sync($request->categories ?? []);
 
             return redirect()->route('songs.show', $song)->with('success', 'Música atualizada com sucesso!');
