@@ -17,7 +17,7 @@ class GroupController extends Controller
 
     public function create()
     {
-        $users = User::all();
+        $users = User::orderBy('name', 'asc')->get();
         return view('groups.create', compact('users'));
     }
 
@@ -155,7 +155,7 @@ class GroupController extends Controller
 
     public function edit(Group $group)
     {
-        $users = User::all();
+        $users = User::orderBy('name', 'asc')->get();
         $selectedUsers = $group->users()->orderBy('group_user.id')->get();
         return view('groups.edit', compact('group', 'users', 'selectedUsers'));
     }
