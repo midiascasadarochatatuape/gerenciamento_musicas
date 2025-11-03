@@ -16,7 +16,7 @@
     <div class="row">
     @foreach($groups as $group)
 
-        <div class="col-md-3">
+        <div class="col-md-3 mb-4">
             <div class="card p-4 d-flex flex-column h-100 justify-content-between">
                 <div class="d-flex flex-column">
                     <div class="d-flex justify-content-center border-bottom">

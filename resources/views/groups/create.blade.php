@@ -21,6 +21,18 @@
                     @enderror
                 </div>
 
+                @if ($errors->has('users'))
+                    <div class="alert alert-danger">
+                        {{ $errors->first('users') }}
+                    </div>
+                @endif
+
+                @if ($errors->has('error'))
+                    <div class="alert alert-danger">
+                        {{ $errors->first('error') }}
+                    </div>
+                @endif
+
                 {{-- <div class="mb-3">
                     <label for="description" class="form-label">Descrição</label>
                     <textarea class="form-control @error('description') is-invalid @enderror"
@@ -32,8 +44,9 @@
 
                 <div id="users-container" class="row d-flex flex-column">
                     <div class="mb-3">
-                        <div class="d-flex gap-2">
-                            <div>
+                        <label class="form-label">Participantes do Grupo</label>
+                        <div class="d-flex gap-2 align-items-center">
+                            <div class="flex-grow-1">
                                 <select class="form-select user-select" name="users[]" required>
                                     <option value="">Selecione um usuário</option>
                                     @foreach($users as $user)
@@ -43,6 +56,12 @@
                             </div>
                         </div>
                     </div>
+                </div>
+
+                <div class="mb-3">
+                    <button type="button" class="btn btn-outline-primary btn-sm" id="add-user-btn">
+                        + Adicionar outro usuário
+                    </button>
                 </div>
 
                 <div class="d-flex justify-content-end">
@@ -129,6 +148,48 @@ document.addEventListener('DOMContentLoaded', function() {
     // Initialize the first select
     const firstSelect = document.querySelector('.user-select');
     firstSelect.addEventListener('change', handleSelectChange);
+
+    // Adicionar evento no botão de adicionar usuário
+    const addUserBtn = document.getElementById('add-user-btn');
+    addUserBtn.addEventListener('click', function() {
+        addUserSelect();
+    });
+
+    // Debug - Log antes do envio do formulário
+    document.querySelector('form').addEventListener('submit', function(e) {
+        const formData = new FormData(this);
+        console.log('=== DADOS DO FORMULÁRIO ===');
+        console.log('Action:', this.action);
+        console.log('Method:', this.method);
+
+        const usersArray = [];
+        for (let [key, value] of formData.entries()) {
+            console.log(key, '=', value);
+            if (key === 'users[]') {
+                usersArray.push(value);
+            }
+        }
+
+        console.log('Array de usuários:', usersArray);
+        console.log('Usuários válidos:', usersArray.filter(u => u && u !== ''));
+
+        const userSelects = document.querySelectorAll('.user-select');
+        console.log('Total de selects:', userSelects.length);
+
+        userSelects.forEach((select, index) => {
+            console.log(`Select ${index + 1}: ${select.name} = "${select.value}" (${select.value ? 'VÁLIDO' : 'VAZIO'})`);
+        });
+
+        // Verificar se pelo menos um usuário foi selecionado
+        const validUsers = usersArray.filter(u => u && u !== '');
+        if (validUsers.length === 0) {
+            e.preventDefault();
+            alert('Por favor, selecione pelo menos um usuário para o grupo.');
+            return false;
+        }
+
+        console.log('Formulário válido, enviando...');
+    });
 });
 </script>
 

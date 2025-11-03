@@ -25,54 +25,130 @@ class GroupController extends Controller
 
     public function store(Request $request)
 {
-    // Limpa valores nulos do array de usuários
-    $users = array_filter($request->users, function ($value) {
-        return !is_null($value) && $value !== '';
-    });
+        try {
+            // Debug - Log completo dos dados recebidos
+            \Log::info('GroupController store - Dados completos:', [
+                'request_all' => $request->all(),
+                'users_raw' => $request->users,
+                'name' => $request->name,
+                'method' => $request->method(),
+                'has_users' => $request->has('users')
+            ]);
 
-    $request->merge(['users' => $users]);
+            // Validação inicial do nome
+            $request->validate([
+                'name' => 'required|string|max:255'
+            ]);
 
-    $validated = $request->validate([
-        'name' => 'required|string|max:255',
-        'users' => 'required|array|min:1',
-        'users.*' => 'exists:users,id',
-    ]);
+            // Verificar e processar usuários
+            $usersInput = $request->input('users', []);
+            $users = array_filter($usersInput, function ($value) {
+                return !is_null($value) && $value !== '' && $value !== '0';
+            });
 
-    $group = Group::create([
-        'name' => $validated['name'],
-    ]);
+            \Log::info('Usuários processados:', [
+                'input_original' => $usersInput,
+                'apos_filtro' => $users,
+                'count' => count($users)
+            ]);
 
-    $insert = [];
+            // Verificar se há usuários
+            if (empty($users)) {
+                \Log::warning('Nenhum usuário selecionado');
+                return redirect()->back()
+                    ->withErrors(['users' => 'Selecione pelo menos um usuário para o grupo.'])
+                    ->withInput();
+            }
 
-    foreach ($validated['users'] as $userId) {
-        // Verifica quantas posições o usuário já tem
-        $existingPositions = DB::table('group_user')
-            ->where('user_id', $userId)
-            ->pluck('position')
-            ->toArray();
+            // Validar usuários
+            $validated = $request->validate([
+                'name' => 'required|string|max:255',
+            ]);
 
-        if (in_array('group_1', $existingPositions) && in_array('group_2', $existingPositions)) {
-            $user = \App\Models\User::find($userId);
-            return redirect()->back()->withErrors([
-                'users' => "O usuário {$user->name} já está em dois grupos.",
-            ])->withInput();
+            // Validar se os usuários existem
+            foreach ($users as $userId) {
+                if (!User::find($userId)) {
+                    \Log::error('Usuário não encontrado:', ['user_id' => $userId]);
+                    return redirect()->back()
+                        ->withErrors(['users' => 'Um dos usuários selecionados não é válido.'])
+                        ->withInput();
+                }
+            }
+
+            // Criar o grupo
+            $group = Group::create([
+                'name' => $validated['name'],
+            ]);
+
+            \Log::info('Grupo criado:', ['group_id' => $group->id, 'name' => $group->name]);
+
+            // Preparar dados para inserção
+            $insert = [];
+            foreach ($users as $userId) {
+                // Verificar posições existentes do usuário
+                $existingPositions = DB::table('group_user')
+                    ->where('user_id', $userId)
+                    ->pluck('position')
+                    ->toArray();
+
+                \Log::info('Posições existentes do usuário:', ['user_id' => $userId, 'positions' => $existingPositions]);
+
+                // Verificar se já tem duas posições
+                if (in_array('group_1', $existingPositions) && in_array('group_2', $existingPositions)) {
+                    $user = User::find($userId);
+                    \Log::warning('Usuário já está em dois grupos:', ['user_id' => $userId, 'user_name' => $user->name]);
+
+                    // Deletar o grupo criado se houve erro
+                    $group->delete();
+
+                    return redirect()->back()->withErrors([
+                        'users' => "O usuário {$user->name} já está em dois grupos.",
+                    ])->withInput();
+                }
+
+                $position = in_array('group_1', $existingPositions) ? 'group_2' : 'group_1';
+
+                $insert[] = [
+                    'user_id' => $userId,
+                    'group_id' => $group->id,
+                    'position' => $position,
+                    'created_at' => now(),
+                    'updated_at' => now(),
+                ];
+            }
+
+            \Log::info('Dados para inserção na group_user:', $insert);
+
+            // Inserir relacionamentos
+            if (!empty($insert)) {
+                DB::table('group_user')->insert($insert);
+                \Log::info('Relacionamentos inseridos com sucesso');
+            }
+
+            // Verificar se os dados foram inseridos
+            $insertedCount = DB::table('group_user')->where('group_id', $group->id)->count();
+            \Log::info('Verificação pós-inserção:', [
+                'group_id' => $group->id,
+                'users_inserted' => $insertedCount,
+                'expected' => count($users)
+            ]);
+
+            return redirect()->route('group.index')
+                ->with('success', 'Grupo criado com sucesso!');
+
+        } catch (\Exception $e) {
+            \Log::error('Erro ao criar grupo:', [
+                'message' => $e->getMessage(),
+                'file' => $e->getFile(),
+                'line' => $e->getLine(),
+                'trace' => $e->getTraceAsString()
+            ]);
+
+            return redirect()->back()
+                ->withErrors(['error' => 'Erro ao criar grupo: ' . $e->getMessage()])
+                ->withInput();
         }
-
-        $position = in_array('group_1', $existingPositions) ? 'group_2' : 'group_1';
-
-        $insert[] = [
-            'user_id' => $userId,
-            'group_id' => $group->id,
-            'position' => $position,
-        ];
     }
-
-    // Insere os vínculos com posições
-    DB::table('group_user')->insert($insert);
-
-    return redirect()->route('group.index')
-        ->with('success', 'Grupo criado com sucesso!');
-}
 
 
 
