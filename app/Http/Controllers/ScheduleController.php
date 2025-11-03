@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-
 use App\Models\Schedule;
 use App\Models\Group;
 use App\Models\Song;
