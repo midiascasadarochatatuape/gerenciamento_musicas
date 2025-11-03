@@ -8,13 +8,6 @@
         </div>
     </div>
 
-    @if(session()->has('error'))
-        <div class="alert alert-danger bg-danger text-white alert-dismissible fade show" role="alert">
-            <strong>Erro!</strong> {{ session()->get('error') }}
-            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="alert" aria-label="Close"></button>
-        </div>
-    @endif
-
     <div class="row">
         <div class="col-md-12">
             <div class="card">
