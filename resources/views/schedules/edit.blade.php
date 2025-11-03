@@ -12,7 +12,7 @@
 
     <div class="card">
         <div class="card-body">
-            <form action="{{ route('schedule.update', $schedule) }}" method="POST">
+            <form action="{{ route('schedules.update', $schedule) }}" method="POST">
                 @csrf
                 @method('PUT')
                 <div class="row mb-3">
@@ -68,14 +68,18 @@
 
                 <div class="row mb-3">
                     <div class="col-12">
-                        <label>Músicas *</label>
+                        <label>Músicas</label>
+                        <div class="alert alert-info d-none">
+                            <i class="material-symbols-outlined me-2">info</i>
+                            <small>Você pode remover todas as músicas clicando em "Remover" para cada uma. O contador de execuções das músicas será automaticamente ajustado.</small>
+                        </div>
                         <div id="songs-container">
                             @foreach($schedule->songs as $index => $scheduledSong)
                                 <div class="song-item mb-2">
                                     <div class="row">
                                         <div class="col-md-6 d-flex align-items-center">
                                             <span class="material-symbols-outlined handle">drag_indicator</span>
-                                            <select class="form-control form-select me-4" name="songs[]" required>
+                                            <select class="form-control form-select me-4" name="songs[]">
                                                 <option value="">Selecione uma música</option>
                                                 @foreach($songs as $song)
                                                     <option value="{{ $song->id }}"
@@ -107,7 +111,7 @@
                 </div>
 
                 <div class="d-flex justify-content-end">
-                    <a href="{{ route('schedule.index') }}" class="btn btn-secondary me-2">Cancelar</a>
+                    <a href="{{ route('schedules.index') }}" class="btn btn-secondary me-2">Cancelar</a>
                     <button type="submit" class="btn btn-primary">Atualizar Escala</button>
                 </div>
             </form>
@@ -167,7 +171,7 @@ document.addEventListener('DOMContentLoaded', function() {
             <div class="row">
                 <div class="col-md-6 d-flex align-items-center">
                     <span class="material-symbols-outlined handle">drag_indicator</span>
-                    <select class="form-control form-select me-4" name="songs[]" required>
+                    <select class="form-control form-select me-4" name="songs[]">
                         <option value="">Selecione uma música</option>
                         ${allSongs.map(song => `
                             <option value="${song.id}">${song.title}</option>

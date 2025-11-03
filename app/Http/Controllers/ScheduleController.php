@@ -34,17 +34,33 @@ class ScheduleController extends Controller
 
     public function store(Request $request)
     {
+        \Log::info('ScheduleController store - Início', [
+            'request_all' => $request->all(),
+            'method' => $request->method()
+        ]);
+
+        // Filtrar arrays vazios antes da validação
+        $songsArray = $request->input('songs', []);
+        $filteredSongs = array_filter($songsArray, function($song) {
+            return !empty($song);
+        });
+
+        // Substituir no request
+        $request->merge(['songs' => empty($filteredSongs) ? null : array_values($filteredSongs)]);
+
         $validated = $request->validate([
             'group_id' => 'required|exists:groups,id',
             'date' => 'required|date',
             'time' => 'nullable|date_format:H:i',
             'event_type' => 'nullable|string|max:255',
             'notes' => 'nullable|string',
-            'songs' => 'required|array',
-            'songs.*' => 'exists:songs,id',
+            'songs' => 'nullable|array',
+            'songs.*' => 'nullable|exists:songs,id',
             'tones.*' => 'nullable|string|max:10',
             'song_notes.*' => 'nullable|string'
         ]);
+
+        \Log::info('ScheduleController store - Validação passou', ['validated' => $validated]);
 
         $schedule = Schedule::create([
             'group_id' => $validated['group_id'],
@@ -54,33 +70,57 @@ class ScheduleController extends Controller
             'notes' => $validated['notes']
         ]);
 
-        $songData = [];
-        foreach ($validated['songs'] as $index => $songId) {
-            $songData[$songId] = [
-                'order' => $index + 1,
-                'tone' => $request->tones[$index] ?? null,
-                'notes' => $request->song_notes[$index] ?? null
-            ];
+        // Só processa músicas se foram selecionadas
+        if (!empty($validated['songs'])) {
+            $songData = [];
+            foreach ($validated['songs'] as $index => $songId) {
+                // Filtrar valores vazios
+                if (!empty($songId)) {
+                    $songData[$songId] = [
+                        'order' => $index + 1,
+                        'tone' => $request->tones[$index] ?? null,
+                        'notes' => $request->song_notes[$index] ?? null
+                    ];
 
-            // Increment times counter for each song
-            Song::where('id', $songId)->increment('times');
+                    // Increment times counter for each song
+                    Song::where('id', $songId)->increment('times');
+                }
+            }
+
+            if (!empty($songData)) {
+                $schedule->songs()->attach($songData);
+            }
         }
 
-        $schedule->songs()->attach($songData);
+        \Log::info('ScheduleController store - Escala criada', ['schedule_id' => $schedule->id]);
 
-        return redirect()->route('schedule.index')
+        return redirect()->route('schedules.index')
             ->with('success', 'Escala criada com sucesso!');
     }
 
     public function update(Request $request, Schedule $schedule)
     {
+        \Log::info('ScheduleController update - Início', [
+            'schedule_id' => $schedule->id,
+            'request_all' => $request->all(),
+        ]);
+
+        // Filtrar arrays vazios antes da validação
+        $songsArray = $request->input('songs', []);
+        $filteredSongs = array_filter($songsArray, function($song) {
+            return !empty($song);
+        });
+
+        // Substituir no request - permitir array vazio para remoção de todas as músicas
+        $request->merge(['songs' => array_values($filteredSongs)]);
+
         $validated = $request->validate([
             'group_id' => 'required|exists:groups,id',
             'date' => 'required|date',
             'time' => 'nullable|date_format:H:i',
             'event_type' => 'nullable|string|max:255',
             'notes' => 'nullable|string',
-            'songs' => 'required|array',
+            'songs' => 'nullable|array',  // Permitir array vazio
             'songs.*' => 'exists:songs,id',
             'tones.*' => 'nullable|string|max:10',
             'song_notes.*' => 'nullable|string'
@@ -88,19 +128,26 @@ class ScheduleController extends Controller
 
         // Get current songs before any changes
         $oldSongIds = $schedule->songs->pluck('id');
-        $newSongIds = collect($validated['songs']);
+        $newSongIds = collect($validated['songs'] ?? []);
+
+        \Log::info('ScheduleController update - Comparação de músicas', [
+            'old_songs' => $oldSongIds->toArray(),
+            'new_songs' => $newSongIds->toArray()
+        ]);
 
         // Find songs that were removed
         $removedSongIds = $oldSongIds->diff($newSongIds);
 
         // Decrement times for removed songs
         if ($removedSongIds->isNotEmpty()) {
+            \Log::info('ScheduleController update - Decrementando times', ['removed_songs' => $removedSongIds->toArray()]);
             Song::whereIn('id', $removedSongIds)->decrement('times');
         }
 
         // Find and increment new songs
         $addedSongIds = $newSongIds->diff($oldSongIds);
         if ($addedSongIds->isNotEmpty()) {
+            \Log::info('ScheduleController update - Incrementando times', ['added_songs' => $addedSongIds->toArray()]);
             Song::whereIn('id', $addedSongIds)->increment('times');
         }
 
@@ -113,19 +160,25 @@ class ScheduleController extends Controller
             'notes' => $validated['notes']
         ]);
 
-        // Update song relationships
+        // Update song relationships - permitir array vazio
         $songData = [];
-        foreach ($validated['songs'] as $index => $songId) {
-            $songData[$songId] = [
-                'order' => $index + 1,
-                'tone' => $request->tones[$index] ?? null,
-                'notes' => $request->song_notes[$index] ?? null
-            ];
+        if (!empty($validated['songs'])) {
+            foreach ($validated['songs'] as $index => $songId) {
+                if (!empty($songId)) {
+                    $songData[$songId] = [
+                        'order' => $index + 1,
+                        'tone' => $request->tones[$index] ?? null,
+                        'notes' => $request->song_notes[$index] ?? null
+                    ];
+                }
+            }
         }
 
         $schedule->songs()->sync($songData);
 
-        return redirect()->route('schedule.index')
+        \Log::info('ScheduleController update - Escala atualizada', ['schedule_id' => $schedule->id]);
+
+        return redirect()->route('schedules.index')
             ->with('success', 'Escala atualizada com sucesso!');
     }
 
@@ -137,7 +190,7 @@ class ScheduleController extends Controller
         });
 
         $schedule->delete();
-        return redirect()->route('schedule.index')
+        return redirect()->route('schedules.index')
             ->with('success', 'Escala excluída com sucesso!');
     }
 
