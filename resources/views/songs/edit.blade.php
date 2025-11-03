@@ -89,9 +89,9 @@
                             </div>
                             <div class="col-lg-3 col-md-3 col-4">
                                 <div class="form-group mb-3">
-                                    <label class="form-label" for="drive_url">Kit Vozes</label>
-                                    <input type="url" class="form-control" id="drive_url" name="drive_url"
-                                           value="{{ old('drive_url', $song->link_drive) }}">
+                                    <label class="form-label" for="link_drive">Kit Vozes</label>
+                                    <input type="url" class="form-control" id="link_drive" name="link_drive"
+                                           value="{{ old('link_drive', $song->link_drive) }}">
                                 </div>
                             </div>
 
