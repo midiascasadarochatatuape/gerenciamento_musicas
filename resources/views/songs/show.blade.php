@@ -745,7 +745,117 @@
             return (match && match[2].length === 11) ? match[2] : null;
         }
     });
+
+    // Função para abrir tutorial em modal aninhado
+    function openTutorialModal(tutorialId, url, title, instrument) {
+        // Extrair ID do vídeo do YouTube
+        const videoId = getYoutubeVideoId(url);
+        if (videoId) {
+            const embedUrl = `https://www.youtube.com/embed/${videoId}`;
+            const iframe = document.getElementById(`tutorialIframe${tutorialId}`);
+            iframe.src = embedUrl;
+        }
+    }
+
+    // Gerenciar modals aninhados de tutoriais
+    document.addEventListener('DOMContentLoaded', function() {
+        const tutorialsMainModal = document.getElementById('tutorialsModal');
+
+        // Controlar abertura do modal principal
+        tutorialsMainModal.addEventListener('show.bs.modal', function() {
+            // Limpar backdrops órfãos antes de abrir
+            document.querySelectorAll('.modal-backdrop').forEach(backdrop => {
+                backdrop.remove();
+            });
+        });
+
+        // Para cada modal de tutorial individual
+        @if($song->tutorials && $song->tutorials->count() > 0)
+            @foreach($song->tutorials as $tutorial)
+                const tutorialModal{{ $tutorial->id }} = document.getElementById('tutorialModal{{ $tutorial->id }}');
+                const tutorialIframe{{ $tutorial->id }} = document.getElementById('tutorialIframe{{ $tutorial->id }}');
+
+                // Quando o modal individual for mostrado, diminuir z-index do modal principal
+                tutorialModal{{ $tutorial->id }}.addEventListener('show.bs.modal', function() {
+                    // Ocultar temporariamente o modal principal (sem fechar)
+                    tutorialsMainModal.style.zIndex = '1040';
+                    this.style.zIndex = '1055';
+
+                    // Garantir que só existe um backdrop visível
+                    const existingBackdrops = document.querySelectorAll('.modal-backdrop');
+                    existingBackdrops.forEach((backdrop, index) => {
+                        if (index > 0) {
+                            backdrop.style.display = 'none';
+                        }
+                    });
+                });
+
+                // Quando o modal individual for fechado, restaurar e reabrir o modal principal
+                tutorialModal{{ $tutorial->id }}.addEventListener('hidden.bs.modal', function() {
+                    // Limpar iframe
+                    tutorialIframe{{ $tutorial->id }}.src = '';
+
+                    // Limpar completamente todos os backdrops
+                    document.querySelectorAll('.modal-backdrop').forEach(backdrop => {
+                        backdrop.remove();
+                    });
+
+                    // Restaurar z-index do modal principal
+                    tutorialsMainModal.style.zIndex = '1050';
+
+                    // Aguardar a limpeza completa antes de reabrir
+                    setTimeout(function() {
+                        // Verificar se não há outros modais abertos
+                        const openModals = document.querySelectorAll('.modal.show');
+                        if (openModals.length === 0) {
+                            // Reabrir o modal principal de tutoriais
+                            const tutorialsModal = new bootstrap.Modal(tutorialsMainModal);
+                            tutorialsModal.show();
+                        }
+                    }, 250);
+                });
+            @endforeach
+        @endif
+    });
+
+    // Função auxiliar para extrair ID do YouTube (duplicada para uso global)
+    function getYoutubeVideoId(url) {
+        const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*).*/;
+        const match = url.match(regExp);
+        return (match && match[2].length === 11) ? match[2] : null;
+    }
 </script>
+
+<style>
+    /* Estilos para modais aninhados */
+    .modal.show {
+        display: block !important;
+    }
+
+    /* Controle de backdrop para modais aninhados */
+    .modal-backdrop {
+        z-index: 1040;
+    }
+
+    .modal-backdrop:last-of-type {
+        z-index: 1049;
+    }
+
+    /* Garantir que o modal de tutorial fique por cima */
+    .modal[id*="tutorialModal"] {
+        z-index: 1055 !important;
+    }
+
+    /* Modal principal de tutoriais */
+    #tutorialsModal {
+        z-index: 1050 !important;
+    }
+
+    /* Prevenir múltiplos backdrops */
+    .modal-backdrop + .modal-backdrop {
+        display: none !important;
+    }
+</style>
 
 <!-- Modal dos Tutoriais -->
 <div class="modal fade" id="tutorialsModal" tabindex="-1" aria-labelledby="tutorialsModalLabel" aria-hidden="true">
@@ -772,10 +882,16 @@
                                         @if($tutorial->title)
                                             <p class="card-text small text-muted mb-2">{{ $tutorial->title }}</p>
                                         @endif
-                                        <a href="{{ $tutorial->url }}" target="_blank" class="btn btn-sm btn-info text-white px-4 d-flex align-items-center justify-content-center gap-1">
+                                        <button type="button"
+                                                class="btn btn-sm btn-info text-white px-4 d-flex align-items-center justify-content-center gap-1"
+                                                data-bs-toggle="modal"
+                                                data-bs-target="#tutorialModal{{ $tutorial->id }}"
+                                                data-tutorial-url="{{ $tutorial->url }}"
+                                                data-tutorial-title="{{ $tutorial->title ?? $tutorial->instrument }}"
+                                                onclick="openTutorialModal('{{ $tutorial->id }}', '{{ $tutorial->url }}', '{{ $tutorial->title ?? $tutorial->instrument }}', '{{ $tutorial->instrument }}')">
                                             <span class="material-symbols-outlined me-1" style="font-size: 1rem;">play_circle</span>
                                             Assistir Tutorial
-                                        </a>
+                                        </button>
                                     </div>
                                 </div>
                             </div>
@@ -791,5 +907,38 @@
         </div>
     </div>
 </div>
+
+<!-- Modais individuais para cada tutorial -->
+@if($song->tutorials && $song->tutorials->count() > 0)
+    @foreach($song->tutorials as $tutorial)
+        <div class="modal fade" id="tutorialModal{{ $tutorial->id }}" tabindex="-1" aria-labelledby="tutorialModalLabel{{ $tutorial->id }}" aria-hidden="true">
+            <div class="modal-dialog modal-lg modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title d-flex align-items-center" id="tutorialModalLabel{{ $tutorial->id }}">
+                            <span class="material-symbols-outlined me-2">school</span>
+                            Tutorial de {{ $tutorial->title ?? $tutorial->instrument }} - {{ $song->title }}
+                        </h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body p-0">
+                        <div class="ratio ratio-16x9">
+                            <iframe id="tutorialIframe{{ $tutorial->id }}"
+                                    src=""
+                                    allowfullscreen
+                                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture">
+                            </iframe>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <a href="{{ $tutorial->url }}" target="_blank" class="btn btn-sm px-3 btn-outline-info rounded-pill d-flex align-items-center gap-1">
+                            <span class="material-symbols-outlined me-1">open_in_new</span> Abrir no YouTube
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    @endforeach
+@endif
 
 @endsection
