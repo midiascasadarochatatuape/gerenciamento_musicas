@@ -28,22 +28,22 @@ Route::middleware(['auth'])->group(function () {
 Auth::routes();
 
 // Rotas de músicas reorganizadas
-Route::get('/songs', [SongController::class, 'searchSongs'])->name('songs.index');
-Route::get('/songs/simple', [SongController::class, 'index'])->name('songs.simple');
-Route::get('/songs/create', [SongController::class, 'create'])->name('songs.create');
-Route::post('/songs', [SongController::class, 'store'])->name('songs.store');
-Route::post('/songs/store-and-new', [SongController::class, 'storeAndNew'])->name('songs.store-and-new');
-Route::get('/songs/{song}', [SongController::class, 'show'])->name('songs.show');
-Route::get('/songs/{song}/edit', [SongController::class, 'edit'])->name('songs.edit');
-Route::put('/songs/{song}', [SongController::class, 'update'])->name('songs.update');
-Route::delete('/songs/{song}', [SongController::class, 'destroy'])->name('songs.destroy');
-Route::get('/songs-all', [SongController::class, 'allSongs'])->name('songs.all');
-Route::get('/api/songs/simple-search', [SongController::class, 'search'])->name('songs.search');
 Route::middleware(['auth'])->group(function () {
+    Route::get('/songs', [SongController::class, 'searchSongs'])->name('songs.index');
+    Route::get('/songs/simple', [SongController::class, 'index'])->name('songs.simple');
+    Route::get('/songs/create', [SongController::class, 'create'])->name('songs.create');
+    Route::post('/songs', [SongController::class, 'store'])->name('songs.store');
+    Route::post('/songs/store-and-new', [SongController::class, 'storeAndNew'])->name('songs.store-and-new');
+    Route::get('/songs/{song}', [SongController::class, 'show'])->name('songs.show');
+    Route::get('/songs/{song}/edit', [SongController::class, 'edit'])->name('songs.edit');
+    Route::put('/songs/{song}', [SongController::class, 'update'])->name('songs.update');
+    Route::delete('/songs/{song}', [SongController::class, 'destroy'])->name('songs.destroy');
+    Route::get('/songs-all', [SongController::class, 'allSongs'])->name('songs.all');
     Route::resource('group', GroupController::class);
     Route::get('/songs/create/suggestion', [SongController::class, 'createSuggestion'])->name('songs.create.suggestion');
     Route::post('/songs/store-suggestion-and-new', [SongController::class, 'storeSuggestionAndNew'])->name('songs.store-suggestion-and-new');
 });
+
 Route::middleware(['auth'])->group(function () {
     Route::resource('schedule', ScheduleController::class);
     Route::get('/minhas-escalas', [ScheduleController::class, 'userNextSchedule'])->name('schedule.user');
@@ -55,6 +55,7 @@ Auth::routes();
 // Remova ou comente esta linha duplicada
 // Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 Route::get('/ajax/songs/search', [SongController::class, 'search'])->name('songs.ajax.search');
+
 Route::middleware(['auth'])->group(function () {
     Route::get('/user/{user}/edit', [UserController::class, 'edit'])->name('user.edit');
     Route::resource('categories', CategoryController::class)->except(['edit', 'update', 'show']);
@@ -77,6 +78,7 @@ Route::get('/test-api', function () {
 });
 Route::get('/api/songs/{song}/lyrics', [SongController::class, 'getLyrics']);
 Route::get('/api/songs/{song}/chords', [SongController::class, 'getChords']);
+Route::get('/api/songs/simple-search', [SongController::class, 'search'])->name('songs.search');
 
 Route::resource('cifras', CifraController::class);
 
