@@ -208,13 +208,6 @@ class SongController extends Controller
     {
         //dd($request->link_youtube);
 
-        // Debug essencial
-        \Log::info('SongController update - Dados recebidos', [
-            'has_tutorials' => $request->has('tutorials'),
-            'tutorials_count' => $request->has('tutorials') ? count($request->get('tutorials')) : 0,
-            'tutorials_data' => $request->get('tutorials')
-        ]);
-
         $this->authorize('update', $song);
 
         //dd($request);
@@ -243,20 +236,12 @@ class SongController extends Controller
                 'tutorials.*.url' => 'nullable|url|max:500'
             ]);
 
-            \Log::info('SongController update - Validação bem sucedida', [
-                'validated_data_keys' => array_keys($validatedData),
-                'has_tutorials_in_validated' => isset($validatedData['tutorials'])
-            ]);
-
         } catch (\Illuminate\Validation\ValidationException $e) {
             \Log::error('SongController update - Erro de validação', [
-                'errors' => $e->errors(),
-                'request_tutorials' => $request->get('tutorials')
+                'errors' => $e->errors()
             ]);
             throw $e;
-        }
-
-        try {
+        }        try {
             if ($request->hasFile('image')) {
                 if ($song->image && file_exists(public_path($song->image))) {
                     unlink(public_path($song->image));
@@ -283,22 +268,11 @@ class SongController extends Controller
 
                 // Adicionar novos tutoriais
                 foreach ($request->tutorials as $tutorial) {
-                    \Log::info('SongController update - Processando tutorial', [
-                        'tutorial_data' => $tutorial,
-                        'has_instrument' => !empty($tutorial['instrument']),
-                        'has_url' => !empty($tutorial['url'])
-                    ]);
-
                     if (!empty($tutorial['instrument']) && !empty($tutorial['url'])) {
-                        $createdTutorial = $song->tutorials()->create([
+                        $song->tutorials()->create([
                             'instrument' => $tutorial['instrument'],
                             'title' => $tutorial['title'] ?? null,
                             'url' => $tutorial['url']
-                        ]);
-
-                        \Log::info('SongController update - Tutorial criado', [
-                            'tutorial_id' => $createdTutorial->id,
-                            'tutorial_data' => $createdTutorial->toArray()
                         ]);
                     }
                 }

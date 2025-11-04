@@ -350,13 +350,7 @@
         var tempDiv = document.createElement('div');
         const form = document.getElementById('formEdit');
 
-        // Debug: verificar campos de tutoriais antes do envio
-        console.log('=== DEBUG TUTORIAIS ===');
-        const tutorialInputs = form.querySelectorAll('[name*="tutorials"]');
-        console.log('Campos de tutoriais encontrados:', tutorialInputs.length);
-        tutorialInputs.forEach((input, index) => {
-            console.log(`Campo ${index}: ${input.name} = ${input.value}`);
-        });
+
 
         tempDiv.innerHTML = content;
 
