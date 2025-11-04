@@ -572,7 +572,7 @@
                     <input type="url" class="form-control" name="tutorials[${tutorialCount}][url]" placeholder="https://youtube.com/...">
                 </div>
                 <div class="col-md-2 d-flex align-items-end">
-                    <button type="button" class="btn btn-outline-danger remove-tutorial">
+                    <button type="button" class="btn btn-outline-danger px-4 d-flex align-items-center remove-tutorial">
                         <i class="material-symbols-outlined">delete</i>
                     </button>
                 </div>

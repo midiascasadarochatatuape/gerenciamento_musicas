@@ -186,10 +186,10 @@
                                                     <option value="Cordas">Cordas</option>
                                                 </select>
                                             </div>
-                                            <div class="col-md-3">
+                                            <!-- div class="col-md-3">
                                                 <label class="form-label">Título (opcional)</label>
                                                 <input type="text" class="form-control" name="tutorials[0][title]" placeholder="Ex: Tutorial básico">
-                                            </div>
+                                            </div -->
                                             <div class="col-md-4">
                                                 <label class="form-label">URL do Tutorial</label>
                                                 <input type="url" class="form-control" name="tutorials[0][url]" placeholder="https://youtube.com/...">
@@ -528,16 +528,12 @@
                         <option value="Cordas">Cordas</option>
                     </select>
                 </div>
-                <div class="col-md-3">
-                    <label class="form-label">Título (opcional)</label>
-                    <input type="text" class="form-control" name="tutorials[${tutorialCount}][title]" placeholder="Ex: Tutorial básico">
-                </div>
                 <div class="col-md-4">
                     <label class="form-label">URL do Tutorial</label>
                     <input type="url" class="form-control" name="tutorials[${tutorialCount}][url]" placeholder="https://youtube.com/...">
                 </div>
                 <div class="col-md-2 d-flex align-items-end">
-                    <button type="button" class="btn btn-outline-danger remove-tutorial">
+                    <button type="button" class="btn btn-outline-danger px-4 d-flex align-items-center remove-tutorial">
                         <i class="material-symbols-outlined">delete</i>
                     </button>
                 </div>
