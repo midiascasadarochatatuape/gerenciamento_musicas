@@ -47,7 +47,7 @@
                         <div class="form-group">
                             <label for="time">Horário</label>
                             <input type="time" class="form-control @error('time') is-invalid @enderror"
-                                   id="time" name="time" value="{{ old('time') }}">
+                                   id="time" name="time" value="10:00:00">
                             @error('time')
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
@@ -56,8 +56,8 @@
                     <div class="col-md-3">
                         <div class="form-group">
                             <label for="event_type">Tipo de Evento</label>
-                            <input type="text" class="form-control @error('event_type') is-invalid @enderror"
-                                   id="event_type" name="event_type" value="{{ old('event_type') }}">
+                            <input type="text" value="Culto" class="form-control @error('event_type') is-invalid @enderror"
+                                   id="event_type" name="event_type">
                             @error('event_type')
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
@@ -66,12 +66,15 @@
                 </div>
 
                 <div class="row mb-3">
-                                        <div class="col-md-12">
+                    <div class="col-md-12">
                         <h5 class="mb-3">Músicas da Escala</h5>
-                        <div class="alert alert-info d-flex align-items-center">
+
+                        <div class="alert alert-info d-flex align-items-center alert-dismissible fade show mb-5" role="alert">
                             <i class="material-symbols-outlined me-2">info</i>
-                            <small>Você pode criar uma escala sem músicas e adicionar as músicas posteriormente. Ideal para preparar a estrutura e deixar que a equipe técnica complete os detalhes.</small>
+                            <p class="m-0">Você pode criar uma escala sem músicas e adicionar as músicas posteriormente. Ideal para preparar a estrutura e deixar que a equipe técnica complete os detalhes.</p>
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                         </div>
+
                         <div id="songsContainer">
                             <!-- Primeira música -->
                             <div class="song-item mb-2">

@@ -27,7 +27,7 @@ class ScheduleController extends Controller
 
     public function create()
     {
-        $groups = Group::all();
+        $groups = Group::orderBy('name', 'asc')->get();
         $songs = Song::where('status', 7)->get(); // Only approved songs
         return view('schedules.create', compact('groups', 'songs'));
     }
@@ -197,7 +197,7 @@ class ScheduleController extends Controller
     public function edit(Schedule $schedule)
         {
             $schedule->load(['group', 'songs']);
-            $groups = Group::all();
+            $groups = Group::orderBy('name', 'asc')->get();
             $songs = Song::where('status', 7)->get();
             return view('schedules.edit', compact('schedule', 'groups', 'songs'));
         }
