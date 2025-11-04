@@ -160,6 +160,56 @@
                             </div>
                         </div>
 
+                        <!-- Seção de Tutoriais -->
+                        <div class="row mb-5">
+                            <div class="col-12">
+                                <h5 class="mb-3">Tutoriais</h5>
+                                <div class="alert alert-info d-flex align-items-center">
+                                    <i class="material-symbols-outlined me-2">info</i>
+                                    Adicione links de tutoriais para diferentes instrumentos. Você pode adicionar múltiplos tutoriais.
+                                </div>
+
+                                <div id="tutorialsContainer">
+                                    <!-- Tutorial inicial -->
+                                    <div class="tutorial-item mb-3 border rounded p-3">
+                                        <div class="row">
+                                            <div class="col-md-3">
+                                                <label class="form-label">Instrumento</label>
+                                                <select class="form-control form-select" name="tutorials[0][instrument]">
+                                                    <option value="">Selecione o instrumento</option>
+                                                    <option value="Guitarra">Guitarra</option>
+                                                    <option value="Teclado">Teclado</option>
+                                                    <option value="Violão">Violão</option>
+                                                    <option value="Bateria">Bateria</option>
+                                                    <option value="Baixo">Baixo</option>
+                                                    <option value="Sopro">Sopro</option>
+                                                    <option value="Cordas">Cordas</option>
+                                                </select>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <label class="form-label">Título (opcional)</label>
+                                                <input type="text" class="form-control" name="tutorials[0][title]" placeholder="Ex: Tutorial básico">
+                                            </div>
+                                            <div class="col-md-4">
+                                                <label class="form-label">URL do Tutorial</label>
+                                                <input type="url" class="form-control" name="tutorials[0][url]" placeholder="https://youtube.com/...">
+                                            </div>
+                                            <div class="col-md-2 d-flex align-items-end">
+                                                <button type="button" class="btn px-4 btn-outline-danger d-flex align-items-center remove-tutorial">
+                                                    <i class="material-symbols-outlined">delete</i>
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <button type="button" id="addTutorial" class="btn btn-outline-primary d-flex align-items-center">
+                                    <i class="material-symbols-outlined me-1">add</i>
+                                    Adicionar Tutorial
+                                </button>
+                            </div>
+                        </div>
+
                         <!-- Categorias e Contexto -->
                         <div class="row mb-5">
 
@@ -454,6 +504,60 @@
                 }
             });
         });
+    });
+
+    // Gerenciamento de tutoriais
+    let tutorialCount = 1;
+
+    document.getElementById('addTutorial').addEventListener('click', function() {
+        const container = document.getElementById('tutorialsContainer');
+        const newTutorial = document.createElement('div');
+        newTutorial.className = 'tutorial-item mb-3 border rounded p-3';
+        newTutorial.innerHTML = `
+            <div class="row">
+                <div class="col-md-3">
+                    <label class="form-label">Instrumento</label>
+                    <select class="form-control form-select" name="tutorials[${tutorialCount}][instrument]">
+                        <option value="">Selecione o instrumento</option>
+                        <option value="Guitarra">Guitarra</option>
+                        <option value="Teclado">Teclado</option>
+                        <option value="Violão">Violão</option>
+                        <option value="Bateria">Bateria</option>
+                        <option value="Baixo">Baixo</option>
+                        <option value="Sopro">Sopro</option>
+                        <option value="Cordas">Cordas</option>
+                    </select>
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label">Título (opcional)</label>
+                    <input type="text" class="form-control" name="tutorials[${tutorialCount}][title]" placeholder="Ex: Tutorial básico">
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label">URL do Tutorial</label>
+                    <input type="url" class="form-control" name="tutorials[${tutorialCount}][url]" placeholder="https://youtube.com/...">
+                </div>
+                <div class="col-md-2 d-flex align-items-end">
+                    <button type="button" class="btn btn-outline-danger remove-tutorial">
+                        <i class="material-symbols-outlined">delete</i>
+                    </button>
+                </div>
+            </div>
+        `;
+        container.appendChild(newTutorial);
+        tutorialCount++;
+    });
+
+    // Remover tutorial
+    document.addEventListener('click', function(e) {
+        if (e.target.closest('.remove-tutorial')) {
+            const tutorialItem = e.target.closest('.tutorial-item');
+            if (document.querySelectorAll('.tutorial-item').length > 1) {
+                tutorialItem.remove();
+            } else {
+                // Limpar os campos se for o último tutorial
+                tutorialItem.querySelectorAll('select, input').forEach(field => field.value = '');
+            }
+        }
     });
 </script>
 

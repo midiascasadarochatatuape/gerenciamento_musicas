@@ -12,7 +12,7 @@
         <div class="col-md-12">
             <div class="card">
                 <div class="card-body">
-                    <form action="{{ route('songs.update', $song->id) }}" method="POST" enctype="multipart/form-data" id="formEdit" onsubmit="beforeSubmit(); return true;">
+                    <form action="{{ route('songs.update', $song->id) }}" method="POST" enctype="multipart/form-data" id="formEdit" onsubmit="return beforeSubmit();">
                         @csrf
                         @method('PUT')
 
@@ -134,6 +134,91 @@
                                     <textarea id="tiny" class="form-control w-100 h-100" name="chord">{!! $song->chords !!}</textarea>
                                     <input type="hidden" name="chords" id="htmlInput" />
                                 </div>
+                            </div>
+                        </div>
+
+                        <!-- Seção de Tutoriais -->
+                        <div class="row mb-5">
+                            <div class="col-12">
+                                <h5 class="mb-3">Tutoriais</h5>
+                                <div class="alert alert-info d-flex align-items-center">
+                                    <i class="material-symbols-outlined me-2">info</i>
+                                    Adicione links de tutoriais para diferentes instrumentos. Você pode adicionar múltiplos tutoriais.
+                                </div>
+
+                                <div id="tutorialsContainer">
+                                    @if($song->tutorials && $song->tutorials->count() > 0)
+                                        @foreach($song->tutorials as $index => $tutorial)
+                                            <div class="tutorial-item mb-3 border rounded p-3">
+                                                <div class="row">
+                                                    <div class="col-md-3">
+                                                        <label class="form-label">Instrumento</label>
+                                                        <select class="form-control form-select" name="tutorials[{{ $index }}][instrument]">
+                                                            <option value="">Selecione o instrumento</option>
+                                                            <option value="Guitarra" {{ $tutorial->instrument == 'Guitarra' ? 'selected' : '' }}>Guitarra</option>
+                                                            <option value="Teclado" {{ $tutorial->instrument == 'Teclado' ? 'selected' : '' }}>Teclado</option>
+                                                            <option value="Violão" {{ $tutorial->instrument == 'Violão' ? 'selected' : '' }}>Violão</option>
+                                                            <option value="Bateria" {{ $tutorial->instrument == 'Bateria' ? 'selected' : '' }}>Bateria</option>
+                                                            <option value="Baixo" {{ $tutorial->instrument == 'Baixo' ? 'selected' : '' }}>Baixo</option>
+                                                            <option value="Sopro" {{ $tutorial->instrument == 'Sopro' ? 'selected' : '' }}>Sopro</option>
+                                                            <option value="Cordas" {{ $tutorial->instrument == 'Cordas' ? 'selected' : '' }}>Cordas</option>
+                                                        </select>
+                                                    </div>
+                                                    <div class="col-md-3">
+                                                        <label class="form-label">Título (opcional)</label>
+                                                        <input type="text" class="form-control" name="tutorials[{{ $index }}][title]" value="{{ $tutorial->title }}" placeholder="Ex: Tutorial básico">
+                                                    </div>
+                                                    <div class="col-md-4">
+                                                        <label class="form-label">URL do Tutorial</label>
+                                                        <input type="url" class="form-control" name="tutorials[{{ $index }}][url]" value="{{ $tutorial->url }}" placeholder="https://youtube.com/...">
+                                                    </div>
+                                                    <div class="col-md-2 d-flex align-items-end">
+                                                        <button type="button" class="btn btn-outline-danger remove-tutorial">
+                                                            <i class="material-symbols-outlined">delete</i>
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        @endforeach
+                                    @else
+                                        <!-- Tutorial inicial vazio -->
+                                        <div class="tutorial-item mb-3 border rounded p-3">
+                                            <div class="row">
+                                                <div class="col-md-3">
+                                                    <label class="form-label">Instrumento</label>
+                                                    <select class="form-control form-select" name="tutorials[0][instrument]">
+                                                        <option value="">Selecione o instrumento</option>
+                                                        <option value="Guitarra">Guitarra</option>
+                                                        <option value="Teclado">Teclado</option>
+                                                        <option value="Violão">Violão</option>
+                                                        <option value="Bateria">Bateria</option>
+                                                        <option value="Baixo">Baixo</option>
+                                                        <option value="Sopro">Sopro</option>
+                                                        <option value="Cordas">Cordas</option>
+                                                    </select>
+                                                </div>
+                                                <!-- div class="col-md-3">
+                                                    <label class="form-label">Título (opcional)</label>
+                                                    <input type="text" class="form-control" name="tutorials[0][title]" placeholder="Ex: Tutorial básico">
+                                                </div -->
+                                                <div class="col-md-4">
+                                                    <label class="form-label">URL do Tutorial</label>
+                                                    <input type="url" class="form-control" name="tutorials[0][url]" placeholder="https://youtube.com/...">
+                                                </div>
+                                                <div class="col-md-2 d-flex align-items-end">
+                                                    <button type="button" class="btn px-4 btn-outline-danger d-flex align-items-center remove-tutorial">
+                                                        <i class="material-symbols-outlined">delete</i>
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    @endif
+                                </div>
+
+                                <button type="button" id="addTutorial" class="btn btn-outline-primary d-flex align-items-center">
+                                    <i class="material-symbols-outlined me-1">add</i>
+                                    Adicionar Tutorial
+                                </button>
                             </div>
                         </div>
 
@@ -265,6 +350,14 @@
         var tempDiv = document.createElement('div');
         const form = document.getElementById('formEdit');
 
+        // Debug: verificar campos de tutoriais antes do envio
+        console.log('=== DEBUG TUTORIAIS ===');
+        const tutorialInputs = form.querySelectorAll('[name*="tutorials"]');
+        console.log('Campos de tutoriais encontrados:', tutorialInputs.length);
+        tutorialInputs.forEach((input, index) => {
+            console.log(`Campo ${index}: ${input.name} = ${input.value}`);
+        });
+
         tempDiv.innerHTML = content;
 
         // Adiciona classe "cifra-chord" a todo texto em negrito
@@ -293,7 +386,8 @@
 
         document.getElementById('htmlInput').value = tempDiv.innerHTML;
 
-        form.submit();
+        // Não chamar form.submit() aqui, deixar o envio normal continuar
+        return true;
 
     }
 </script>
@@ -453,6 +547,60 @@
                 }
             });
         });
+    });
+
+    // Gerenciamento de tutoriais
+    let tutorialCount = {{ $song->tutorials ? $song->tutorials->count() : 1 }};
+
+    document.getElementById('addTutorial').addEventListener('click', function() {
+        const container = document.getElementById('tutorialsContainer');
+        const newTutorial = document.createElement('div');
+        newTutorial.className = 'tutorial-item mb-3 border rounded p-3';
+        newTutorial.innerHTML = `
+            <div class="row">
+                <div class="col-md-3">
+                    <label class="form-label">Instrumento</label>
+                    <select class="form-control form-select" name="tutorials[${tutorialCount}][instrument]">
+                        <option value="">Selecione o instrumento</option>
+                        <option value="Guitarra">Guitarra</option>
+                        <option value="Teclado">Teclado</option>
+                        <option value="Violão">Violão</option>
+                        <option value="Bateria">Bateria</option>
+                        <option value="Baixo">Baixo</option>
+                        <option value="Sopro">Sopro</option>
+                        <option value="Cordas">Cordas</option>
+                    </select>
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label">Título (opcional)</label>
+                    <input type="text" class="form-control" name="tutorials[${tutorialCount}][title]" placeholder="Ex: Tutorial básico">
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label">URL do Tutorial</label>
+                    <input type="url" class="form-control" name="tutorials[${tutorialCount}][url]" placeholder="https://youtube.com/...">
+                </div>
+                <div class="col-md-2 d-flex align-items-end">
+                    <button type="button" class="btn btn-outline-danger remove-tutorial">
+                        <i class="material-symbols-outlined">delete</i>
+                    </button>
+                </div>
+            </div>
+        `;
+        container.appendChild(newTutorial);
+        tutorialCount++;
+    });
+
+    // Remover tutorial
+    document.addEventListener('click', function(e) {
+        if (e.target.closest('.remove-tutorial')) {
+            const tutorialItem = e.target.closest('.tutorial-item');
+            if (document.querySelectorAll('.tutorial-item').length > 1) {
+                tutorialItem.remove();
+            } else {
+                // Limpar os campos se for o último tutorial
+                tutorialItem.querySelectorAll('select, input').forEach(field => field.value = '');
+            }
+        }
     });
 </script>
 

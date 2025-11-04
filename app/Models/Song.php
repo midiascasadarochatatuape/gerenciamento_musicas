@@ -42,4 +42,9 @@ class Song extends Model
     {
         return $this->belongsToMany(Category::class);
     }
+
+    public function tutorials()
+    {
+        return $this->hasMany(SongTutorial::class);
+    }
 }

@@ -159,6 +159,12 @@
                                     <span>Kit de vozes</span>
                                 </a>
                             @endif
+                            @if($song->tutorials && $song->tutorials->count() > 0)
+                                <button type="button" class="btn btn-info text-white d-flex align-items-center justify-content-center gap-2" data-bs-toggle="modal" data-bs-target="#tutorialsModal">
+                                    <span class="material-symbols-outlined text-white">school</span>
+                                    <span>Tutoriais</span>
+                                </button>
+                            @endif
                         </div>
                     @endif
                 </div>
@@ -740,5 +746,50 @@
         }
     });
 </script>
+
+<!-- Modal dos Tutoriais -->
+<div class="modal fade" id="tutorialsModal" tabindex="-1" aria-labelledby="tutorialsModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-header d-flex align-items-center">
+                <h5 class="modal-title d-flex align-items-center" id="tutorialsModalLabel">
+                    <span class="material-symbols-outlined me-2">school</span>
+                    <p class="mb-0">Tutoriais - {{ $song->title }}</p>
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                @if($song->tutorials && $song->tutorials->count() > 0)
+                    <div class="row">
+                        @foreach($song->tutorials as $tutorial)
+                            <div class="col-md-4 mb-3">
+                                <div class="card">
+                                    <div class="card-body">
+                                        <div class="d-flex align-items-center mb-2">
+                                            <span class="material-symbols-outlined me-2 text-info">music_note</span>
+                                            <h6 class="card-title mb-0">{{ $tutorial->instrument }}</h6>
+                                        </div>
+                                        @if($tutorial->title)
+                                            <p class="card-text small text-muted mb-2">{{ $tutorial->title }}</p>
+                                        @endif
+                                        <a href="{{ $tutorial->url }}" target="_blank" class="btn btn-sm btn-info text-white px-4 d-flex align-items-center justify-content-center gap-1">
+                                            <span class="material-symbols-outlined me-1" style="font-size: 1rem;">play_circle</span>
+                                            Assistir Tutorial
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        @endforeach
+                    </div>
+                @else
+                    <div class="text-center py-4">
+                        <span class="material-symbols-outlined text-muted mb-2" style="font-size: 3rem;">school</span>
+                        <p class="text-muted">Nenhum tutorial disponível para esta música.</p>
+                    </div>
+                @endif
+            </div>
+        </div>
+    </div>
+</div>
 
 @endsection

@@ -69,6 +69,21 @@ Route::get('/api-docs', function () {
     return view('api-docs');
 })->name('api.docs');
 
+// Rotas de teste (remover em produção)
+Route::get('/test-tutorials', function () {
+    return view('test-tutorials');
+});
+
+Route::post('/test-tutorials', function (Illuminate\Http\Request $request) {
+    \Log::info('Teste tutoriais recebidos', [
+        'all_data' => $request->all(),
+        'has_tutorials' => $request->has('tutorials'),
+        'tutorials' => $request->get('tutorials')
+    ]);
+
+    return 'Dados recebidos! Verifique os logs.';
+});
+
 // Teste da API
 Route::get('/test-api', function () {
     return response()->json([

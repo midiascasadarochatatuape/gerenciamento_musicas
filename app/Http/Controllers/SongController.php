@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Song;
+use App\Models\SongTutorial;
 use App\Models\Category;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
@@ -187,6 +188,9 @@ class SongController extends Controller
 
     public function show(Song $song)
     {
+        // Carregar tutoriais junto com a música
+        $song->load('tutorials');
+
         if ($song->status < 7) {
             return view('songs.show_suggestion', compact('song'));
         }
@@ -195,37 +199,62 @@ class SongController extends Controller
 
     public function edit(Song $song)
     {
+        $song->load('tutorials');
         $categories = Category::all();
         return view('songs.edit', compact('song', 'categories'));
     }
 
     public function update(Request $request, Song $song)
     {
-
         //dd($request->link_youtube);
+
+        // Debug essencial
+        \Log::info('SongController update - Dados recebidos', [
+            'has_tutorials' => $request->has('tutorials'),
+            'tutorials_count' => $request->has('tutorials') ? count($request->get('tutorials')) : 0,
+            'tutorials_data' => $request->get('tutorials')
+        ]);
 
         $this->authorize('update', $song);
 
         //dd($request);
 
-        $validatedData = $request->validate([
-            'title' => 'required|string|max:255',
-            'version' => 'nullable|string|max:255',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
-            'snippet' => 'nullable|string',
-            'tone' => 'nullable|string|max:10',
-            'tempo' => 'nullable|string|max:50',
-            'measure' => 'nullable|string|max:50',
-            'type' => 'nullable|in:hino,corinho,cantico,atual',
-            'intensity' => 'nullable|in:lenta,media,rapida',
-            'bible_reference' => 'nullable|string',
-            'link_youtube' => 'nullable|url|max:255',
-            'link_spotify' => 'nullable|url|max:255',
-            'link_drive' => 'nullable|url|max:255',
-            'lyrics' => 'nullable|string',
-            'chords' => 'nullable|string',
-            'status' => 'required|integer|between:1,7',
-        ]);
+        try {
+            $validatedData = $request->validate([
+                'title' => 'required|string|max:255',
+                'version' => 'nullable|string|max:255',
+                'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
+                'snippet' => 'nullable|string',
+                'tone' => 'nullable|string|max:10',
+                'tempo' => 'nullable|string|max:50',
+                'measure' => 'nullable|string|max:50',
+                'type' => 'nullable|in:hino,corinho,cantico,atual',
+                'intensity' => 'nullable|in:lenta,media,rapida',
+                'bible_reference' => 'nullable|string',
+                'link_youtube' => 'nullable|url|max:255',
+                'link_spotify' => 'nullable|url|max:255',
+                'link_drive' => 'nullable|url|max:255',
+                'lyrics' => 'nullable|string',
+                'chords' => 'nullable|string',
+                'status' => 'required|integer|between:1,7',
+                'tutorials' => 'nullable|array',
+                'tutorials.*.instrument' => 'nullable|in:Guitarra,Teclado,Violão,Bateria,Baixo,Sopro,Cordas',
+                'tutorials.*.title' => 'nullable|string|max:255',
+                'tutorials.*.url' => 'nullable|url|max:500'
+            ]);
+
+            \Log::info('SongController update - Validação bem sucedida', [
+                'validated_data_keys' => array_keys($validatedData),
+                'has_tutorials_in_validated' => isset($validatedData['tutorials'])
+            ]);
+
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            \Log::error('SongController update - Erro de validação', [
+                'errors' => $e->errors(),
+                'request_tutorials' => $request->get('tutorials')
+            ]);
+            throw $e;
+        }
 
         try {
             if ($request->hasFile('image')) {
@@ -241,8 +270,48 @@ class SongController extends Controller
             $song->update($validatedData);
             $song->categories()->sync($request->categories ?? []);
 
-            return redirect()->route('songs.show', $song)->with('success', 'Música atualizada com sucesso!');
+            // Atualizar tutoriais
+            \Log::info('SongController update - Debug tutoriais', [
+                'has_tutorials' => $request->has('tutorials'),
+                'tutorials_data' => $request->get('tutorials'),
+                'all_request' => $request->all()
+            ]);
+
+            if ($request->has('tutorials')) {
+                // Remover tutoriais existentes
+                $song->tutorials()->delete();
+
+                // Adicionar novos tutoriais
+                foreach ($request->tutorials as $tutorial) {
+                    \Log::info('SongController update - Processando tutorial', [
+                        'tutorial_data' => $tutorial,
+                        'has_instrument' => !empty($tutorial['instrument']),
+                        'has_url' => !empty($tutorial['url'])
+                    ]);
+
+                    if (!empty($tutorial['instrument']) && !empty($tutorial['url'])) {
+                        $createdTutorial = $song->tutorials()->create([
+                            'instrument' => $tutorial['instrument'],
+                            'title' => $tutorial['title'] ?? null,
+                            'url' => $tutorial['url']
+                        ]);
+
+                        \Log::info('SongController update - Tutorial criado', [
+                            'tutorial_id' => $createdTutorial->id,
+                            'tutorial_data' => $createdTutorial->toArray()
+                        ]);
+                    }
+                }
+            } else {
+                // Se não há tutoriais no request, remover todos os existentes
+                $song->tutorials()->delete();
+            }            return redirect()->route('songs.show', $song)->with('success', 'Música atualizada com sucesso!');
         } catch (\Exception $e) {
+            \Log::error('SongController update - Erro na atualização', [
+                'song_id' => $song->id,
+                'error_message' => $e->getMessage(),
+                'error_trace' => $e->getTraceAsString()
+            ]);
             return back()->withInput()->with('error', 'Erro ao atualizar música: ' . $e->getMessage());
         }
     }
@@ -297,7 +366,11 @@ class SongController extends Controller
             'link_drive' => 'nullable|url|max:255',
             'lyrics' => 'nullable|string',
             'chords' => 'nullable|string',
-            'status' => 'required|integer|between:1,7'
+            'status' => 'required|integer|between:1,7',
+            'tutorials' => 'nullable|array',
+            'tutorials.*.instrument' => 'nullable|in:Guitarra,Teclado,Violão,Bateria,Baixo,Sopro,Cordas',
+            'tutorials.*.title' => 'nullable|string|max:255',
+            'tutorials.*.url' => 'nullable|url|max:500'
         ]);
 
         try {
@@ -320,6 +393,19 @@ class SongController extends Controller
 
             if ($request->has('categories')) {
                 $song->categories()->sync($request->categories);
+            }
+
+            // Salvar tutoriais se fornecidos
+            if ($request->has('tutorials')) {
+                foreach ($request->tutorials as $tutorial) {
+                    if (!empty($tutorial['instrument']) && !empty($tutorial['url'])) {
+                        $song->tutorials()->create([
+                            'instrument' => $tutorial['instrument'],
+                            'title' => $tutorial['title'] ?? null,
+                            'url' => $tutorial['url']
+                        ]);
+                    }
+                }
             }
 
             // Se for uma sugestão (status = 1), redirecionar para a página de sugestões
