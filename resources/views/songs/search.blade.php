@@ -317,7 +317,9 @@ document.addEventListener('DOMContentLoaded', function() {
             const params = new URLSearchParams();
             params.set('search', query);
 
-            fetch(`{{ route('songs.ajax.search') }}?${params.toString()}`, {
+            const url = `{{ route('songs.ajax.search') }}?${params.toString()}`;
+
+            fetch(url, {
                 method: 'GET',
                 headers: {
                     'X-Requested-With': 'XMLHttpRequest'
@@ -325,7 +327,7 @@ document.addEventListener('DOMContentLoaded', function() {
             })
             .then(response => {
                 if (!response.ok) {
-                    throw new Error('Erro na busca');
+                    throw new Error(`Erro na busca: ${response.status} ${response.statusText}`);
                 }
                 return response.json();
             })
@@ -356,9 +358,9 @@ document.addEventListener('DOMContentLoaded', function() {
                 });
             })
             .catch(error => {
-                searchResults.innerHTML = '<div class="p-3 text-danger">Erro ao realizar a busca</div>';
+                console.error('Erro detalhado na busca:', error);
+                searchResults.innerHTML = `<div class="p-3 text-danger">Erro ao realizar a busca: ${error.message}</div>`;
                 searchResults.classList.remove('d-none');
-                console.error('Erro:', error);
             })
             .finally(() => {
                 searchSpinner.style.display = 'none';

@@ -449,20 +449,32 @@ class SongController extends Controller
             return response()->json([]);
         }
 
-        $songs = Song::with('user:id,name')
-            ->where(function($query) use ($search) {
-                $query->where('title', 'like', '%' . $search . '%')
-                      ->orWhere('bible_reference', 'like', '%' . $search . '%')
-                      ->orWhere('version', 'like', '%' . $search . '%')
-                      ->orWhereHas('user', function($q) use ($search) {
-                          $q->where('name', 'like', '%' . $search . '%');
-                      });
-            })
-            ->where('status', 7) // Apenas músicas aprovadas
-            ->limit(15)
-            ->get(['id', 'title', 'version', 'tone', 'bible_reference', 'id_user']);
+        try {
+            $songs = Song::with('user:id,name')
+                ->where(function($query) use ($search) {
+                    $query->where('title', 'like', '%' . $search . '%')
+                          ->orWhere('bible_reference', 'like', '%' . $search . '%')
+                          ->orWhere('version', 'like', '%' . $search . '%')
+                          ->orWhereHas('user', function($q) use ($search) {
+                              $q->where('name', 'like', '%' . $search . '%');
+                          });
+                })
+                ->where('status', 7) // Apenas músicas aprovadas
+                ->limit(15)
+                ->get(['id', 'title', 'version', 'tone', 'bible_reference', 'id_user']);
 
-        return response()->json($songs);
+            return response()->json($songs);
+
+        } catch (\Exception $e) {
+            \Log::error('SongController search - Erro na busca', [
+                'search' => $search,
+                'error' => $e->getMessage(),
+                'file' => $e->getFile(),
+                'line' => $e->getLine()
+            ]);
+
+            return response()->json(['error' => 'Erro na busca'], 500);
+        }
     }
 
     public function allSongs(Request $request)

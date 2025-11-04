@@ -54,7 +54,7 @@ Auth::routes();
 
 // Remova ou comente esta linha duplicada
 // Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
-Route::get('/api/songs/search', [SongController::class, 'search'])->name('songs.ajax.search');
+Route::get('/ajax/songs/search', [SongController::class, 'search'])->name('songs.ajax.search');
 Route::middleware(['auth'])->group(function () {
     Route::get('/user/{user}/edit', [UserController::class, 'edit'])->name('user.edit');
     Route::resource('categories', CategoryController::class)->except(['edit', 'update', 'show']);
