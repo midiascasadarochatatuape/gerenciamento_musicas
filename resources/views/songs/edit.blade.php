@@ -197,6 +197,7 @@
                                                         <option value="Cordas">Cordas</option>
                                                     </select>
                                                 </div>
+
                                                 <!-- div class="col-md-3">
                                                     <label class="form-label">Título (opcional)</label>
                                                     <input type="text" class="form-control" name="tutorials[0][title]" placeholder="Ex: Tutorial básico">
